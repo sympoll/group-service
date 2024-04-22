@@ -1,3 +1,3 @@
 # group-management-service
-* Handles user registration, authentication, authorization (roles and permissions).
-* Stores user data securely in the database (PostgreSQL).
+* Enables group creation, deletion, and management.
+* Tracks user memberships within groups.
