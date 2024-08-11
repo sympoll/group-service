@@ -12,10 +12,10 @@ import java.util.UUID;
 @NoArgsConstructor
 @Data
 public class Member {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "group_id")
     private String groupId;
 
+    @Id
     @Column(name = "user_id")
     private UUID userId;
 }
