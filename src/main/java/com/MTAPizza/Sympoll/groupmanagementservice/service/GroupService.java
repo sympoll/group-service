@@ -23,7 +23,7 @@ public class GroupService {
 
         // TODO: Add creator Id into a new list of admins
         Group createdGroup = Group.builder()
-                .groupId(groupIdReceived != null ? groupIdReceived : UUID.randomUUID().toString()) // If defined a group ID then use it, otherwise generate random group ID.
+                .groupId(groupIdReceived != null ? groupIdReceived : UUID.randomUUID().toString().replaceAll("[^0-9]", "")) // If defined a group ID then use it, otherwise generate random group ID.
                 .groupName(groupCreateRequest.groupName())
                 .description(groupCreateRequest.description())
                 .creatorId(groupCreateRequest.creatorId())
