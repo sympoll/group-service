@@ -8,6 +8,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+import java.util.UUID;
+
 @Slf4j
 @RequiredArgsConstructor
 @Service
@@ -15,11 +18,12 @@ public class GroupService {
     private final GroupRepository groupRepository;
 
     public GroupResponse createGroup(GroupCreateRequest groupCreateRequest) {
-        // TODO: Validate request
+        // TODO: Validate request, including checking the the group ID received (if any) is not already in the DB.
+        String groupIdReceived = groupCreateRequest.groupId();
 
         // TODO: Add creator Id into a new list of admins
         Group createdGroup = Group.builder()
-                .groupId(groupCreateRequest.groupId())
+                .groupId(groupIdReceived != null ? groupIdReceived : UUID.randomUUID().toString()) // If defined a group ID then use it, otherwise generate random group ID.
                 .groupName(groupCreateRequest.groupName())
                 .description(groupCreateRequest.description())
                 .creatorId(groupCreateRequest.creatorId())

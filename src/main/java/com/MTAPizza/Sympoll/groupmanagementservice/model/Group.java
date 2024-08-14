@@ -20,7 +20,6 @@ import java.util.UUID;
 @AllArgsConstructor
 public class Group {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private String groupId;
 
     @Column(name = "group_name")
