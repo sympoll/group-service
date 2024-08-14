@@ -1,7 +1,7 @@
 package com.MTAPizza.Sympoll.groupmanagementservice.model;
 
+import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.MemberResponse;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -18,4 +18,10 @@ public class Member {
     @Id
     @Column(name = "user_id")
     private UUID userId;
+
+    public MemberResponse toMemberResponse() {
+        return new MemberResponse(
+                userId
+        );
+    }
 }
