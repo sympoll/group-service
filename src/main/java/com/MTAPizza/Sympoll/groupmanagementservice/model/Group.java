@@ -40,6 +40,16 @@ public class Group {
 
     // TODO: Add Admins list, will be initialized with the creatorId as the only admin.
 
+    /**
+     * Add a new member to the group.
+     * @param member Member to add to the group.
+     */
+    public void addMember(Member member) {
+        if (!member.getGroupId().equals(groupId))
+            throw new IllegalArgumentException("Invalid member received for group " + groupId + ", member's group ID is " + member.getGroupId());
+        membersList.add(member);
+    }
+
     public GroupResponse toGroupResponse() {
         return new GroupResponse(
                 groupId,
