@@ -93,7 +93,7 @@ public class GroupService {
                         .map(Member::toMemberResponse)
                         .toList()
                 )
-                .orElseThrow(() -> new IllegalArgumentException("invalid group ID - " + groupId));
+                .orElseThrow(() -> new IllegalArgumentException("Received invalid group ID - " + groupId));
     }
 
     /**
@@ -103,10 +103,12 @@ public class GroupService {
      */
     @Transactional
     public String deleteGroup(String groupId) {
-        // TODO: validate that the group ID is valid
-
         log.info("Deleting group with ID - '{}'", groupId);
-        groupRepository.deleteById(groupId);
+        Group group = groupRepository.findById(groupId)
+                .orElseThrow(() -> new IllegalArgumentException("Received invalid group ID - " + groupId));
+
+        group.getMembersList().clear(); // Clear the membersList to trigger orphan removal
+        groupRepository.delete(group);
         log.info("Deleted group with ID - '{}'", groupId);
 
         return groupId;
