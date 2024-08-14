@@ -14,10 +14,10 @@ import java.util.UUID;
 @AllArgsConstructor
 @Data
 public class Member {
+    @Id
     @Column(name = "group_id")
     private String groupId;
 
-    @Id
     @Column(name = "user_id")
     private UUID userId;
 
