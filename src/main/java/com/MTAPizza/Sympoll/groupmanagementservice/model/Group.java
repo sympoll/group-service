@@ -29,7 +29,7 @@ public class Group {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "created_by_user")
+    @Column(name = "creator_id")
     private UUID creatorId;
 
     @Column(name = "time_created")
