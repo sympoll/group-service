@@ -9,6 +9,7 @@ import com.MTAPizza.Sympoll.groupmanagementservice.repository.GroupRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,6 +26,7 @@ public class GroupService {
      * @param groupCreateRequest Details of the group to add.
      * @return Details of the group that was added to the database.
      */
+    @Transactional
     public GroupResponse createGroup(GroupCreateRequest groupCreateRequest) {
         log.info("Creating group {}", groupCreateRequest);
 
@@ -51,6 +53,7 @@ public class GroupService {
      * @param userId ID of the user to add as a member.
      * @return  Information on the member that created and added to the group.
      */
+    @Transactional
     public MemberResponse addMember(String groupId, UUID userId) {
         // TODO: validate the userID with the user service
         Member newMember = new Member(groupId, userId);
@@ -59,6 +62,7 @@ public class GroupService {
                 .orElseThrow(() -> new IllegalArgumentException("Group with ID " + groupId + " not found."));
 
         group.addMember(newMember);
+        groupRepository.save(group); // Save changes to the database
         return newMember.toMemberResponse();
     }
 
@@ -97,6 +101,7 @@ public class GroupService {
      * @param groupId ID of the group to delete.
      * @return The ID of the group that was deleted.
      */
+    @Transactional
     public String deleteGroup(String groupId) {
         // TODO: validate that the group ID is valid
 
