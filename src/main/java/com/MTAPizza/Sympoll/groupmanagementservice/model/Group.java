@@ -15,6 +15,9 @@ public class Group {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private String groupId;
 
+    @Column(name = "group_name")
+    private String groupName;
+
     @Column(name = "description")
     private String description;
 
