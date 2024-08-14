@@ -21,7 +21,6 @@ import java.util.UUID;
 @Service
 public class GroupService {
     private final GroupRepository groupRepository;
-    private final MemberRepository memberRepository;
 
     /**
      * Create and add a group to the database.
@@ -109,8 +108,7 @@ public class GroupService {
         Group group = groupRepository.findById(groupId)
                 .orElseThrow(() -> new IllegalArgumentException("Received invalid group ID - " + groupId));
 
-        memberRepository.deleteById(groupId); // Manually delete the members associated with the group
-        groupRepository.delete(group);
+        groupRepository.deleteById(groupId);
         log.info("Deleted group with ID - '{}'", groupId);
 
         return groupId;
