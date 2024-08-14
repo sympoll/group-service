@@ -35,9 +35,8 @@ public class Group {
     @Column(name = "time_created")
     private final LocalDateTime timeCreated = LocalDateTime.now();  // Initialize to the current time.
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    @JoinColumn(name = "group_id")
-    private List<Member> membersList = new ArrayList<>();           // Initialize to an empty members list.
+    @OneToMany(mappedBy = "groupId", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Member> membersList = new ArrayList<>();          // Initialize to an empty members list.
 
     // TODO: Add Admins list, will be initialized with the creatorId as the only admin.
 
