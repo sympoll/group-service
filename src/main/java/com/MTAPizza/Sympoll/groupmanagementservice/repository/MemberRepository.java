@@ -1,6 +1,6 @@
 package com.MTAPizza.Sympoll.groupmanagementservice.repository;
 
-import com.MTAPizza.Sympoll.groupmanagementservice.model.Member;
+import com.MTAPizza.Sympoll.groupmanagementservice.model.member.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

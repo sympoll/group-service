@@ -4,16 +4,14 @@ import com.MTAPizza.Sympoll.groupmanagementservice.dto.request.GroupCreateReques
 import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.GroupResponse;
 import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.MemberResponse;
 import com.MTAPizza.Sympoll.groupmanagementservice.model.Group;
-import com.MTAPizza.Sympoll.groupmanagementservice.model.Member;
+import com.MTAPizza.Sympoll.groupmanagementservice.model.member.Member;
 import com.MTAPizza.Sympoll.groupmanagementservice.repository.GroupRepository;
-import com.MTAPizza.Sympoll.groupmanagementservice.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
@@ -102,7 +100,6 @@ public class GroupService {
      * @param groupId ID of the group to delete.
      * @return The ID of the group that was deleted.
      */
-    @Transactional
     public String deleteGroup(String groupId) {
         log.info("Deleting group with ID - '{}'", groupId);
         Group group = groupRepository.findById(groupId)
