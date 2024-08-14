@@ -6,6 +6,7 @@ import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.MemberResponse;
 import com.MTAPizza.Sympoll.groupmanagementservice.model.Group;
 import com.MTAPizza.Sympoll.groupmanagementservice.model.Member;
 import com.MTAPizza.Sympoll.groupmanagementservice.repository.GroupRepository;
+import com.MTAPizza.Sympoll.groupmanagementservice.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ import java.util.UUID;
 @Service
 public class GroupService {
     private final GroupRepository groupRepository;
+    private final MemberRepository memberRepository;
 
     /**
      * Create and add a group to the database.
@@ -107,7 +109,7 @@ public class GroupService {
         Group group = groupRepository.findById(groupId)
                 .orElseThrow(() -> new IllegalArgumentException("Received invalid group ID - " + groupId));
 
-        group.getMembersList().clear(); // Clear the membersList to trigger orphan removal
+        memberRepository.deleteById(groupId); // Manually delete the members associated with the group
         groupRepository.delete(group);
         log.info("Deleted group with ID - '{}'", groupId);
 
