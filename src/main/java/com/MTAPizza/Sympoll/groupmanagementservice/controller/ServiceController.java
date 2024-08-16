@@ -84,4 +84,11 @@ public class ServiceController {
         log.info("Received a request to check group id exists with id {}", groupIdExistsRequest.groupId());
         return new GroupIdExistsResponse(groupService.checkGroupIdExists(groupIdExistsRequest.groupId()));
     }
+
+    @GetMapping("/health")
+    @ResponseStatus(HttpStatus.OK)
+    public String HealthCheck(){
+        log.info("Received a request to health check");
+        return "OK";
+    }
 }
