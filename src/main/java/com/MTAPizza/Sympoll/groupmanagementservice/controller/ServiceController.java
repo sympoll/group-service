@@ -1,7 +1,9 @@
 package com.MTAPizza.Sympoll.groupmanagementservice.controller;
 
 import com.MTAPizza.Sympoll.groupmanagementservice.dto.request.GroupCreateRequest;
+import com.MTAPizza.Sympoll.groupmanagementservice.dto.request.GroupIdExistsRequest;
 import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.DeleteGroupResponse;
+import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.GroupIdExistsResponse;
 import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.GroupResponse;
 import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.MemberResponse;
 import com.MTAPizza.Sympoll.groupmanagementservice.service.GroupService;
@@ -74,5 +76,12 @@ public class ServiceController {
     public DeleteGroupResponse deleteGroup(@RequestParam String groupId) {
         log.info("Received a request to delete group with id {}", groupId);
         return new DeleteGroupResponse(groupService.deleteGroup(groupId));
+    }
+
+    @GetMapping("/id")
+    @ResponseStatus(HttpStatus.OK)
+    public GroupIdExistsResponse checkGroupIdExists(@RequestBody GroupIdExistsRequest groupIdExistsRequest) {
+        log.info("Received a request to check group id exists with id {}", groupIdExistsRequest.groupId());
+        return new GroupIdExistsResponse(groupService.checkGroupIdExists(groupIdExistsRequest.groupId()));
     }
 }
