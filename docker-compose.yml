@@ -1,0 +1,27 @@
+services:
+  group-db:
+    image: postgres:16.2
+    container_name: group-db
+    ports:
+      - "5435:5432"
+    environment:
+      POSTGRES_DB: groupdb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1
+    volumes:
+      - ./data:/var/lib/postgresql/data  # Maps the local directory ./data to the container’s data directory for data persistence.
+      - ./docker/init.sql:/docker-entrypoint-initdb.d/init.sql  # Maps the local SQL file ./docker/init.sql to the container’s initialization directory to run when the container starts.
+    networks:
+      - sympoll-network
+
+  group-service:
+    image: group-service:1.0
+    container_name: group-service
+    ports:
+      - "8085:8085"
+    networks:
+      - sympoll-network
+
+networks:
+  sympoll-network:
+    driver: bridge

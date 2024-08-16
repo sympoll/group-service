@@ -1,6 +1,7 @@
 package com.MTAPizza.Sympoll.groupmanagementservice.model;
 
 import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.GroupResponse;
+import com.MTAPizza.Sympoll.groupmanagementservice.model.member.Member;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,7 +21,6 @@ import java.util.UUID;
 @AllArgsConstructor
 public class Group {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private String groupId;
 
     @Column(name = "group_name")
@@ -29,17 +29,26 @@ public class Group {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "created_by_user")
+    @Column(name = "creator_id")
     private UUID creatorId;
 
     @Column(name = "time_created")
     private final LocalDateTime timeCreated = LocalDateTime.now();  // Initialize to the current time.
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    @JoinColumn(name = "group_id")
-    private List<Member> membersList = new ArrayList<>();           // Initialize to an empty members list.
+    @OneToMany(mappedBy = "groupId", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Member> membersList = new ArrayList<>();          // Initialize to an empty members list.
 
     // TODO: Add Admins list, will be initialized with the creatorId as the only admin.
+
+    /**
+     * Add a new member to the group.
+     * @param member Member to add to the group.
+     */
+    public void addMember(Member member) {
+        if (!member.getGroupId().equals(groupId))
+            throw new IllegalArgumentException("Invalid member received for group " + groupId + ", member's group ID is " + member.getGroupId());
+        membersList.add(member);
+    }
 
     public GroupResponse toGroupResponse() {
         return new GroupResponse(
@@ -48,7 +57,7 @@ public class Group {
                 description,
                 creatorId,
                 timeCreated,
-                membersList.stream().map(Member::toMemberResponse).toList() // Convert to member response
+                membersList != null ? membersList.stream().map(Member::toMemberResponse).toList() : new ArrayList<>() // Convert to member response
         );
     }
 }
