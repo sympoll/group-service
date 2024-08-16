@@ -17,7 +17,7 @@ import java.util.UUID;
 
 @Slf4j
 @RestController
-@RequestMapping("api/group")
+@RequestMapping("/api/group")
 @RequiredArgsConstructor
 public class ServiceController {
     private final GroupService groupService;
