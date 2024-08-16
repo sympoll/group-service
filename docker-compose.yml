@@ -15,7 +15,7 @@ services:
       - sympoll-network
 
   group-service:
-    image: ghcr.io/sympoll/group-service/sympoll-group-service-test:latest
+    image: group-service:1.0
     container_name: group-service
     ports:
       - "8085:8085"
