@@ -113,6 +113,9 @@ public class GroupService {
 
     public boolean checkGroupIdExists(String groupId) {
         log.info("Checking if group with ID - '{}' exists", groupId);
+
+        log.info("All groups {}" , groupRepository.findAll().toString());
+
         return groupRepository.existsById(groupId);
     }
 }
