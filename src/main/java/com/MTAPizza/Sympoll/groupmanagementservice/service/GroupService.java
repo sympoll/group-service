@@ -116,6 +116,8 @@ public class GroupService {
 
         log.info("All groups {}" , groupRepository.findAll().toString());
 
+        log.info("true or false {}",groupRepository.existsById(groupId));
+
         return groupRepository.existsById(groupId);
     }
 }
