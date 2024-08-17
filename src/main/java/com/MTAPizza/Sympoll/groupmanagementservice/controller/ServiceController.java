@@ -81,6 +81,7 @@ public class ServiceController {
     @GetMapping("/id")
     @ResponseStatus(HttpStatus.OK)
     public GroupIdExistsResponse checkGroupIdExists(@RequestParam GroupIdExistsRequest groupIdExistsRequest) {
+        log.info("Group id exists object: {}", groupIdExistsRequest.toString());
         log.info("Received a request to check group id exists with id {}", groupIdExistsRequest.groupId());
         return new GroupIdExistsResponse(groupService.checkGroupIdExists(groupIdExistsRequest.groupId()));
     }
