@@ -1,10 +1,6 @@
 package com.MTAPizza.Sympoll.groupmanagementservice.model.member.id;
 
-
-import com.MTAPizza.Sympoll.groupmanagementservice.model.member.Member;
-import jakarta.persistence.Id;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 
 import java.io.Serializable;
 import java.util.Objects;

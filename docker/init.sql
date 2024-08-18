@@ -15,6 +15,22 @@ CREATE TABLE members
     PRIMARY KEY (group_id, user_id)
 );
 
+CREATE TABLE roles
+(
+    role_id   UUID PRIMARY KEY,
+    role_name VARCHAR(255),
+    UNIQUE (role_name)
+);
+
+CREATE TABLE user_roles
+(
+    user_id  UUID REFERENCES members (user_id) ON DELETE CASCADE NOT NULL,
+    group_id VARCHAR(255) REFERENCES groups (group_id) ON DELETE CASCADE NOT NULL,
+    role_id  UUID REFERENCES roles (role_id) ON DELETE CASCADE NOT NULL,
+    PRIMARY KEY (user_id, group_id, role_id)
+);
+
+
 -- Insert sample data into the groups table
 INSERT INTO groups (group_id, group_name, description, creator_id)
 VALUES ('group_1', 'Developers', 'Group for developers to discuss and share knowledge.',
