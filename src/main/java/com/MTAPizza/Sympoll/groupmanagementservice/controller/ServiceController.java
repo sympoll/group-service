@@ -49,6 +49,19 @@ public class ServiceController {
     }
 
     /**
+     * Remove a user from the members list of a group.
+     * @param groupId ID of the group to remove the user from.
+     * @param userId ID of the user to remove from the group.
+     * @return Information of the member that was removed from the group.
+     */
+    @PostMapping("/remove-member")
+    @ResponseStatus(HttpStatus.OK)
+    public MemberResponse removeMember(@RequestParam String groupId, @RequestParam UUID userId) {
+        log.info("Received request to remove the member {} from the group, {}", userId, groupId);
+        return groupService.removeMember(groupId, userId);
+    }
+
+    /**
      * Fetch and return all groups from the database.
      * @return List of group information.
      */

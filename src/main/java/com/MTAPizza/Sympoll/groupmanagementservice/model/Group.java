@@ -50,6 +50,26 @@ public class Group {
         membersList.add(member);
     }
 
+    /**
+     * Remove a member from the group.
+     * @param memberId ID of the member to remove from the group.
+     */
+    public void removeMember(UUID memberId) {
+        membersList.removeIf((member) -> member.getUserId().equals(memberId));
+    }
+
+    /**
+     * Find and return a member in the group's members list.
+     * @param memberId ID of the member.
+     * @return Member object.
+     */
+    public Member getMember(UUID memberId) {
+        return membersList.stream()
+                .filter(member -> member.getUserId().equals(memberId))
+                .findFirst()
+                .orElse(null);
+    }
+
     public GroupResponse toGroupResponse() {
         return new GroupResponse(
                 groupId,
