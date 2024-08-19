@@ -54,7 +54,7 @@ public class ServiceController {
      * @param userId ID of the user to remove from the group.
      * @return Information of the member that was removed from the group.
      */
-    @PostMapping("/remove-member")
+    @DeleteMapping("/remove-member")
     @ResponseStatus(HttpStatus.OK)
     public MemberResponse removeMember(@RequestParam String groupId, @RequestParam UUID userId) {
         log.info("Received request to remove the member {} from the group, {}", userId, groupId);
