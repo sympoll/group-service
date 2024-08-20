@@ -35,7 +35,7 @@ public class UserRolesService {
 
     public int getRoleIdOfSpecificUser(UUID userId, String groupId) {
         //TODO: validation method
-        log.info("Get role id for {}", userId);
+        log.info("Get role id for {} from the group {}", userId, groupId);
         return userRoleRepository.findByUserIdAndGroupId(userId,groupId).getRoleId();
     }
 

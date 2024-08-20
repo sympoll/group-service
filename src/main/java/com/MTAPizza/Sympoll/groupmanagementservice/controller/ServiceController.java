@@ -18,7 +18,8 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/group")
 @RequiredArgsConstructor
-public class ServiceController {
+public class
+ServiceController {
     private final GroupService groupService;
     private final UserRolesService userRolesService;
 
