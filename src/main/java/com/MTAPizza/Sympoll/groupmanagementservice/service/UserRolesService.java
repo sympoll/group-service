@@ -15,8 +15,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Service
 public class UserRolesService {
-    private UserRoleRepository userRoleRepository;
-    private RoleService roleService;
+    private final UserRoleRepository userRoleRepository;
+    private final RoleService roleService;
 
     public UserRoleResponse createUserRole(UUID userId, String groupId, int roleId) {
         //TODO: validation method
