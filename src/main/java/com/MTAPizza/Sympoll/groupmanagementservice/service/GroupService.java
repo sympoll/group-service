@@ -3,6 +3,7 @@ package com.MTAPizza.Sympoll.groupmanagementservice.service;
 import com.MTAPizza.Sympoll.groupmanagementservice.dto.request.GroupCreateRequest;
 import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.GroupResponse;
 import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.MemberResponse;
+import com.MTAPizza.Sympoll.groupmanagementservice.exception.found.ResourceNotFoundException;
 import com.MTAPizza.Sympoll.groupmanagementservice.model.Group;
 import com.MTAPizza.Sympoll.groupmanagementservice.model.member.Member;
 import com.MTAPizza.Sympoll.groupmanagementservice.repository.GroupRepository;
@@ -58,11 +59,33 @@ public class GroupService {
         Member newMember = new Member(groupId, userId);
 
         Group group = groupRepository.findById(groupId)
-                .orElseThrow(() -> new IllegalArgumentException("Group with ID " + groupId + " not found."));
+                .orElseThrow(() -> new ResourceNotFoundException("Group with ID " + groupId + " not found."));
 
         group.addMember(newMember);
         groupRepository.save(group); // Save changes to the database
         return newMember.toMemberResponse();
+    }
+
+    /**
+     * Remove a member from a group in the database.
+     * @param groupId ID of the group to remove the member from.
+     * @param userId ID of the user to remove as a member.
+     * @return  Information on the member that was removed from the group.
+     */
+    @Transactional
+    public MemberResponse removeMember(String groupId, UUID userId) {
+        Group group = groupRepository.findById(groupId)
+                .orElseThrow(() -> new IllegalArgumentException("Could not remove member with ID " + userId + ", Group with ID " + groupId + " not found."));
+
+        Member memberToRemove = group.getMember(userId);
+        if (memberToRemove == null) {
+            throw new IllegalArgumentException("Could not remove member with ID " + userId + ", member not found.");
+        }
+
+        group.removeMember(userId);
+        groupRepository.save(group); // Save changes to the database
+
+        return memberToRemove.toMemberResponse();
     }
 
     /**
