@@ -1,6 +1,7 @@
 package com.MTAPizza.Sympoll.groupmanagementservice.controller;
 
 import com.MTAPizza.Sympoll.groupmanagementservice.dto.request.GroupCreateRequest;
+import com.MTAPizza.Sympoll.groupmanagementservice.dto.request.UserRoleChangeRequest;
 import com.MTAPizza.Sympoll.groupmanagementservice.dto.request.UserRoleCreateRequest;
 import com.MTAPizza.Sympoll.groupmanagementservice.dto.request.UserRoleDeleteRequest;
 import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.*;
@@ -100,7 +101,7 @@ ServiceController {
 
     /**
      * Add a new role to a user in specific group.
-     * @param userRoleCreateRequest Contain the user id, group id and role id.
+     * @param userRoleCreateRequest Contain the user id, group id and role name.
      * @return A DTO object with the user id and his new role name.
      */
     @PostMapping("/user-role")
@@ -124,8 +125,20 @@ ServiceController {
     }
 
     /**
+     * Change the given user's role in specific group.
+     * @param userRoleChangeRequest Contain the user id, group id and the new role name.
+     * @return The previous user's role name.
+     */
+    @PutMapping("/user-role")
+    @ResponseStatus(HttpStatus.OK)
+    public String changeUserRole(@RequestBody UserRoleChangeRequest userRoleChangeRequest) {
+        log.info("Received a request to change user role");
+        return userRolesService.changeUserRole(userRoleChangeRequest.userId(), userRoleChangeRequest.groupId(), userRoleChangeRequest.newRoleName());
+    }
+
+    /**
      * Delete a user role from the database.
-     * @param userRoleDeleteRequest Contain the user id, group id and role id.
+     * @param userRoleDeleteRequest Contain the user id, group id and role name.
      * @return A DTO with the user id and his deleted role name.
      */
     @DeleteMapping("/user-role")
