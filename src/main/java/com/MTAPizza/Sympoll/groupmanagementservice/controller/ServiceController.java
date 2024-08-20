@@ -107,20 +107,7 @@ ServiceController {
     @ResponseStatus(HttpStatus.CREATED)
     public UserRoleResponse createUserRole(@RequestBody UserRoleCreateRequest userRoleCreateRequest) {
         log.info("Received a request to create a user role");
-        return userRolesService.createUserRole(userRoleCreateRequest.userId(), userRoleCreateRequest.groupId(), userRoleCreateRequest.roleId());
-    }
-
-    /**
-     * Return the given user's role id in specific group.
-     * @param userId Given user ID.
-     * @param groupId Given group ID.
-     * @return The ID of the user's role in the given group.
-     */
-    @GetMapping("/user-role/id")
-    @ResponseStatus(HttpStatus.OK)
-    public int getRoleIdOfSpecificUser(@RequestParam UUID userId, @RequestParam String groupId) {
-        log.info("Received a request to get role id of specific user");
-        return userRolesService.getRoleIdOfSpecificUser(userId, groupId);
+        return userRolesService.createUserRole(userRoleCreateRequest.userId(), userRoleCreateRequest.groupId(), userRoleCreateRequest.roleName());
     }
 
     /**
@@ -129,7 +116,7 @@ ServiceController {
      * @param groupId Given group ID.
      * @return The name of the user's role in the given group.
      */
-    @GetMapping("/user-role/name")
+    @GetMapping("/user-role")
     @ResponseStatus(HttpStatus.OK)
     public String getRoleNameOfSpecificUser(@RequestParam UUID userId, @RequestParam String groupId) {
         log.info("Received a request to get role name of specific user");
@@ -145,6 +132,6 @@ ServiceController {
     @ResponseStatus(HttpStatus.OK)
     public UserRoleDeleteResponse deleteUserRole(@RequestBody UserRoleDeleteRequest userRoleDeleteRequest) {
         log.info("Received a request to delete user role");
-        return userRolesService.deleteUserRole(userRoleDeleteRequest.userId(), userRoleDeleteRequest.groupId(), userRoleDeleteRequest.roleId());
+        return userRolesService.deleteUserRole(userRoleDeleteRequest.userId(), userRoleDeleteRequest.groupId(), userRoleDeleteRequest.roleName());
     }
 }

@@ -15,8 +15,6 @@ import java.util.UUID;
 @AllArgsConstructor
 public class Role {
     @Id
-    private int roleId;
-
     @Column(name = "role_name")
     private String roleName;
 }

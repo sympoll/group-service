@@ -5,6 +5,6 @@ import java.util.UUID;
 public record UserRoleDeleteRequest(
         UUID userId,
         String groupId,
-        int roleId
+        String roleName
 ) {
 }

@@ -22,34 +22,22 @@ public class UserRolesService {
      * Add a new role to a user in specific group.
      * @param userId Given user ID.
      * @param groupId Given group ID.
-     * @param roleId Given role ID.
+     * @param roleName Given role name.
      * @return A DTO object with the user id and his new role name.
      */
-    public UserRoleResponse createUserRole(UUID userId, String groupId, int roleId) {
+    public UserRoleResponse createUserRole(UUID userId, String groupId, String roleName) {
         //TODO: validation method
         log.info("Create user role for {}", userId);
 
         UserRole createdUserRole = UserRole.builder()
                 .userId(userId)
                 .groupId(groupId)
-                .roleId(roleId)
+                .roleId(roleName)
                 .build();
 
         userRoleRepository.save(createdUserRole);
         log.info("Created user role for {}", userId);
-        return new UserRoleResponse(userId, roleService.getRole(roleId).getRoleName());
-    }
-
-    /**
-     * Return the given user's role id in specific group.
-     * @param userId Given user ID.
-     * @param groupId Given group ID.
-     * @return The ID of the user's role in the given group.
-     */
-    public int getRoleIdOfSpecificUser(UUID userId, String groupId) {
-        //TODO: validation method
-        log.info("Get role id for {} from the group {}", userId, groupId);
-        return userRoleRepository.findByUserIdAndGroupId(userId,groupId).getRoleId();
+        return new UserRoleResponse(userId, roleService.getRole(roleName).getRoleName());
     }
 
     /**
@@ -61,23 +49,23 @@ public class UserRolesService {
     public String getRoleNameOfSpecificUser(UUID userId, String groupId) {
         //TODO: validation method
         log.info("Get role name for {}", userId);
-        int roleId = userRoleRepository.findByUserIdAndGroupId(userId, groupId).getRoleId();
-        return roleService.getRole(roleId).getRoleName();
+        String roleName = userRoleRepository.findByUserIdAndGroupId(userId, groupId).getRoleId();
+        return roleService.getRole(roleName).getRoleName();
     }
 
     /**
      * Delete a user role from the database.
      * @param userId Given user ID.
      * @param groupId Given group ID.
-     * @param roleId Given role ID.
+     * @param roleName Given role name.
      * @return A DTO with the user id and his deleted role name.
      */
-    public UserRoleDeleteResponse deleteUserRole(UUID userId, String groupId, int roleId) {
+    public UserRoleDeleteResponse deleteUserRole(UUID userId, String groupId, String roleName) {
         //TODO: validation method
         log.info("Delete user role for {}", userId);
         UserRole userRole = userRoleRepository.findByUserIdAndGroupId(userId, groupId);
         userRoleRepository.delete(userRole);
         log.info("Deleted user role for {}", userId);
-        return new UserRoleDeleteResponse(userId, roleService.getRole(roleId).getRoleName());
+        return new UserRoleDeleteResponse(userId, roleService.getRole(roleName).getRoleName());
     }
 }

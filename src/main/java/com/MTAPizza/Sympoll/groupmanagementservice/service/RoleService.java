@@ -14,9 +14,9 @@ import java.util.UUID;
 public class RoleService {
     private final RoleRepository roleRepository;
 
-    public Role getRole(int roleId) {
-        log.info("Getting role with id {}", roleId);
-        return roleRepository.getReferenceById(roleId);
+    public Role getRole(String roleName) {
+        log.info("Getting role with id {}", roleName);
+        return roleRepository.getReferenceById(roleName);
     }
 
 }

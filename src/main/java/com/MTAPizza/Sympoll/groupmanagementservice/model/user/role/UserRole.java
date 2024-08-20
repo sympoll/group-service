@@ -26,6 +26,6 @@ public class UserRole {
     private String groupId;
 
     @Id
-    @Column(name = "role_id")
-    private int roleId;
+    @Column(name = "role_name")
+    private String roleId;
 }

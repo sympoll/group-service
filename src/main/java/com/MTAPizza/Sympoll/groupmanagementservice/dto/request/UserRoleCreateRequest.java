@@ -5,6 +5,6 @@ import java.util.UUID;
 public record UserRoleCreateRequest(
         UUID userId,
         String groupId,
-        int roleId
+        String roleName
 ) {
 }
