@@ -17,7 +17,7 @@ CREATE TABLE members
 
 CREATE TABLE roles
 (
-    role_id   UUID PRIMARY KEY,
+    role_id SERIAL PRIMARY KEY,
     role_name VARCHAR(255),
     UNIQUE (role_name)
 );
@@ -26,7 +26,7 @@ CREATE TABLE user_roles
 (
     user_id  UUID REFERENCES members (user_id) ON DELETE CASCADE NOT NULL,
     group_id VARCHAR(255) REFERENCES groups (group_id) ON DELETE CASCADE NOT NULL,
-    role_id  UUID REFERENCES roles (role_id) ON DELETE CASCADE NOT NULL,
+    role_id  INT REFERENCES roles (role_id) ON DELETE CASCADE NOT NULL,
     PRIMARY KEY (user_id, group_id, role_id)
 );
 

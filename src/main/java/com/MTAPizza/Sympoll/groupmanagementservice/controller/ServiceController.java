@@ -1,12 +1,11 @@
 package com.MTAPizza.Sympoll.groupmanagementservice.controller;
 
 import com.MTAPizza.Sympoll.groupmanagementservice.dto.request.GroupCreateRequest;
-import com.MTAPizza.Sympoll.groupmanagementservice.dto.request.GroupIdExistsRequest;
-import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.DeleteGroupResponse;
-import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.GroupIdExistsResponse;
-import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.GroupResponse;
-import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.MemberResponse;
+import com.MTAPizza.Sympoll.groupmanagementservice.dto.request.UserRoleCreateRequest;
+import com.MTAPizza.Sympoll.groupmanagementservice.dto.request.UserRoleDeleteRequest;
+import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.*;
 import com.MTAPizza.Sympoll.groupmanagementservice.service.GroupService;
+import com.MTAPizza.Sympoll.groupmanagementservice.service.UserRolesService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -21,6 +20,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ServiceController {
     private final GroupService groupService;
+    private final UserRolesService userRolesService;
 
     /**
      * Add a new group to the database.
@@ -90,5 +90,33 @@ public class ServiceController {
     public String HealthCheck(){
         log.info("Received a request to health check");
         return "OK";
+    }
+
+    @PostMapping("/user-role")
+    @ResponseStatus(HttpStatus.CREATED)
+    public UserRoleResponse createUserRole(@RequestBody UserRoleCreateRequest userRoleCreateRequest) {
+        log.info("Received a request to create a user role");
+        return userRolesService.createUserRole(userRoleCreateRequest.userId(), userRoleCreateRequest.groupId(), userRoleCreateRequest.roleId());
+    }
+
+    @GetMapping("/user-role/id")
+    @ResponseStatus(HttpStatus.OK)
+    public int getRoleIdOfSpecificUser(@RequestParam UUID userId, @RequestParam String groupId) {
+        log.info("Received a request to get role id of specific user");
+        return userRolesService.getRoleIdOfSpecificUser(userId, groupId);
+    }
+
+    @GetMapping("/user-role/name")
+    @ResponseStatus(HttpStatus.OK)
+    public String getRoleNameOfSpecificUser(@RequestParam UUID userId, @RequestParam String groupId) {
+        log.info("Received a request to get role name of specific user");
+        return userRolesService.getRoleNameOfSpecificUser(userId, groupId);
+    }
+
+    @DeleteMapping("/user-role")
+    @ResponseStatus(HttpStatus.OK)
+    public UserRoleDeleteResponse deleteUserRole(@RequestBody UserRoleDeleteRequest userRoleDeleteRequest) {
+        log.info("Received a request to delete user role");
+        return userRolesService.deleteUserRole(userRoleDeleteRequest.userId(), userRoleDeleteRequest.groupId(), userRoleDeleteRequest.roleId());
     }
 }

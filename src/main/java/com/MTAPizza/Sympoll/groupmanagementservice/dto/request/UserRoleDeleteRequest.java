@@ -1,0 +1,10 @@
+package com.MTAPizza.Sympoll.groupmanagementservice.dto.request;
+
+import java.util.UUID;
+
+public record UserRoleDeleteRequest(
+        UUID userId,
+        String groupId,
+        int roleId
+) {
+}

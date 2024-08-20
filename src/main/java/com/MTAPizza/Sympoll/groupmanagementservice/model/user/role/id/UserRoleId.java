@@ -11,7 +11,7 @@ public class UserRoleId implements Serializable {
 
     private UUID userId;
 
-    private UUID roleId;
+    private int roleId;
 
     @Override
     public boolean equals(Object o) {

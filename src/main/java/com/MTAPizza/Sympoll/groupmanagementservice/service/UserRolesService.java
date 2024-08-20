@@ -18,7 +18,7 @@ public class UserRolesService {
     private UserRoleRepository userRoleRepository;
     private RoleService roleService;
 
-    public UserRoleResponse createUserRole(UUID userId, String groupId, UUID roleId) {
+    public UserRoleResponse createUserRole(UUID userId, String groupId, int roleId) {
         //TODO: validation method
         log.info("Create user role for {}", userId);
 
@@ -33,7 +33,7 @@ public class UserRolesService {
         return new UserRoleResponse(userId, roleService.getRole(roleId).getRoleName());
     }
 
-    public UUID getRoleIdOfSpecificUser(UUID userId, String groupId) {
+    public int getRoleIdOfSpecificUser(UUID userId, String groupId) {
         //TODO: validation method
         log.info("Get role id for {}", userId);
         return userRoleRepository.findByUserIdAndGroupId(userId,groupId).getRoleId();
@@ -42,11 +42,11 @@ public class UserRolesService {
     public String getRoleNameOfSpecificUser(UUID userId, String groupId) {
         //TODO: validation method
         log.info("Get role name for {}", userId);
-        UUID roleId = userRoleRepository.findByUserIdAndGroupId(userId, groupId).getRoleId();
+        int roleId = userRoleRepository.findByUserIdAndGroupId(userId, groupId).getRoleId();
         return roleService.getRole(roleId).getRoleName();
     }
 
-    public UserRoleDeleteResponse deleteUserRole(UUID userId, String groupId, UUID roleId) {
+    public UserRoleDeleteResponse deleteUserRole(UUID userId, String groupId, int roleId) {
         //TODO: validation method
         log.info("Delete user role for {}", userId);
         UserRole userRole = userRoleRepository.findByUserIdAndGroupId(userId, groupId);
@@ -54,6 +54,4 @@ public class UserRolesService {
         log.info("Deleted user role for {}", userId);
         return new UserRoleDeleteResponse(userId, roleService.getRole(roleId).getRoleName());
     }
-
-
 }

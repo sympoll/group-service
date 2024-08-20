@@ -14,8 +14,7 @@ import java.util.UUID;
 public class RoleService {
     private final RoleRepository roleRepository;
 
-    public Role getRole(UUID roleId) {
-        // TODO: validator methods
+    public Role getRole(int roleId) {
         log.info("Getting role with id {}", roleId);
         return roleRepository.getReferenceById(roleId);
     }

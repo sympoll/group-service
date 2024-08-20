@@ -27,5 +27,5 @@ public class UserRole {
 
     @Id
     @Column(name = "role_id")
-    private UUID roleId;
+    private int roleId;
 }
