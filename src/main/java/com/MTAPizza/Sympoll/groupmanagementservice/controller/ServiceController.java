@@ -79,6 +79,11 @@ ServiceController {
         return new DeleteGroupResponse(groupService.deleteGroup(groupId));
     }
 
+    /**
+     * Verifying the given group ID exists in the database.
+     * @param groupId A group ID to verify.
+     * @return A DTO with 'isExists' boolean value.
+     */
     @GetMapping("/id")
     @ResponseStatus(HttpStatus.OK)
     public GroupIdExistsResponse checkGroupIdExists(@RequestParam String groupId) {;
@@ -93,6 +98,11 @@ ServiceController {
         return "OK";
     }
 
+    /**
+     * Add a new role to a user in specific group.
+     * @param userRoleCreateRequest Contain the user id, group id and role id.
+     * @return A DTO object with the user id and his new role name.
+     */
     @PostMapping("/user-role")
     @ResponseStatus(HttpStatus.CREATED)
     public UserRoleResponse createUserRole(@RequestBody UserRoleCreateRequest userRoleCreateRequest) {
@@ -100,6 +110,12 @@ ServiceController {
         return userRolesService.createUserRole(userRoleCreateRequest.userId(), userRoleCreateRequest.groupId(), userRoleCreateRequest.roleId());
     }
 
+    /**
+     * Return the given user's role id in specific group.
+     * @param userId Given user ID.
+     * @param groupId Given group ID.
+     * @return The ID of the user's role in the given group.
+     */
     @GetMapping("/user-role/id")
     @ResponseStatus(HttpStatus.OK)
     public int getRoleIdOfSpecificUser(@RequestParam UUID userId, @RequestParam String groupId) {
@@ -107,6 +123,12 @@ ServiceController {
         return userRolesService.getRoleIdOfSpecificUser(userId, groupId);
     }
 
+    /**
+     * Return the given user's role name in specific group.
+     * @param userId Given user ID.
+     * @param groupId Given group ID.
+     * @return The name of the user's role in the given group.
+     */
     @GetMapping("/user-role/name")
     @ResponseStatus(HttpStatus.OK)
     public String getRoleNameOfSpecificUser(@RequestParam UUID userId, @RequestParam String groupId) {
@@ -114,6 +136,11 @@ ServiceController {
         return userRolesService.getRoleNameOfSpecificUser(userId, groupId);
     }
 
+    /**
+     * Delete a user role from the database.
+     * @param userRoleDeleteRequest Contain the user id, group id and role id.
+     * @return A DTO with the user id and his deleted role name.
+     */
     @DeleteMapping("/user-role")
     @ResponseStatus(HttpStatus.OK)
     public UserRoleDeleteResponse deleteUserRole(@RequestBody UserRoleDeleteRequest userRoleDeleteRequest) {

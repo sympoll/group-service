@@ -111,6 +111,11 @@ public class GroupService {
         return groupId;
     }
 
+    /**
+     * Verifying the given group ID exists in the database
+     * @param groupId A group ID to verify
+     * @return True if the ID exists in the database. Otherwise, return false
+     */
     public boolean checkGroupIdExists(String groupId) {
         log.info("Checking if group with ID - '{}' exists", groupId);
         return groupRepository.existsById(groupId);
