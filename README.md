@@ -8,7 +8,26 @@ The Group Service is a REST API controller designed to manage group operations w
 
 ## Endpoints
 
-### 1. **Create a Group**
+### 1. **Health Check**
+
+   - **URL:** `/api/group/health`
+   - **Method:** `GET`
+   - **Description:** Performs a health check of the Group Service.
+   - **Sample Request:** `/api/group/health`
+   - **Response:**
+     - `String`: "OK" if the service is running properly.
+       
+       ```json
+       "OK"
+       ```
+   - **Response Status:** `200 OK`
+   - **Logs:**
+     - `INFO`: Logs when a health check request is received.
+
+---   
+
+
+### 2. **Create a Group**
 
    - **URL:** `/api/group`   
    - **Method:** `POST`   
@@ -44,7 +63,7 @@ The Group Service is a REST API controller designed to manage group operations w
 
 ---   
 
-### 2. **Add a Member to a Group**
+### 3. **Add a Member to a Group**
 
    - **URL:** `/api/group/add-member`
    - **Method:** `POST`
@@ -68,7 +87,7 @@ The Group Service is a REST API controller designed to manage group operations w
 
 ---   
    
-### 3. **Remove a Member from a Group**
+### 4. **Remove a Member from a Group**
 
    - **URL:** `/api/group/remove-member`
    - **Method:** `DELETE`
@@ -92,7 +111,7 @@ The Group Service is a REST API controller designed to manage group operations w
 
 ---   
 
-### 4. **Get All Groups**
+### 5. **Get All Groups**
 
    - **URL:** `/api/group/all`
    - **Method:** `GET`
@@ -131,7 +150,7 @@ The Group Service is a REST API controller designed to manage group operations w
 
 ---   
 
-### 5. **Get All Members of a Group**
+### 6. **Get All Members of a Group**
 
    - **URL:** `/api/group/members`
    - **Method:** `GET`
@@ -158,7 +177,7 @@ The Group Service is a REST API controller designed to manage group operations w
 
 ---   
 
-### 6. **Delete a Group**
+### 7. **Delete a Group**
 
    - **URL:** `/api/group`
    - **Method:** `DELETE`
@@ -180,7 +199,7 @@ The Group Service is a REST API controller designed to manage group operations w
 
 ---   
 
-### 7. **Check if a Group ID Exists**
+### 8. **Check if a Group ID Exists**
 
    - **URL:** `/api/group/id`
    - **Method:** `GET`
@@ -202,23 +221,25 @@ The Group Service is a REST API controller designed to manage group operations w
 
 ---   
 
-### 8. **Health Check**
+### 9. **Check User's Permission to Delete a Poll**
 
-   - **URL:** `/api/group/health`
+   - **URL:** `/api/group/user-role/permission/delete`
    - **Method:** `GET`
-   - **Description:** Performs a health check of the Group Service.
-   - **Sample Request:** `/api/group/health`
+   - **Description:** Verifies whether a given user has the permission to delete a poll in a specified group.
+   - **Query Parameters:**
+     - `userId` (UUID): The ID of the user whose permissions are being checked.
+     - `groupId` (String): The ID of the group in which the poll deletion permission is being verified.
+   - **Sample Request:**
+     - URL: `/api/group/user-role/permission/delete?userId=d290f1ee-6c54-4b01-90e6-d701748f0851&groupId=1a2b3c`
    - **Response:**
-     - `String`: "OK" if the service is running properly.
+     - `boolean`: `true` if the user has permission to delete polls in the specified group, `false` otherwise.
        
        ```json
-       "OK"
+       true
        ```
    - **Response Status:** `200 OK`
    - **Logs:**
-     - `INFO`: Logs when a health check request is received.
-
-
+     - `INFO`: Logs when a request to check user permission to delete a poll is received.
 
 <br />   
 
