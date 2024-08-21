@@ -1,12 +1,12 @@
 package com.MTAPizza.Sympoll.groupmanagementservice.controller;
 
 import com.MTAPizza.Sympoll.groupmanagementservice.dto.request.GroupCreateRequest;
-import com.MTAPizza.Sympoll.groupmanagementservice.dto.request.GroupIdExistsRequest;
-import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.DeleteGroupResponse;
-import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.GroupIdExistsResponse;
-import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.GroupResponse;
-import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.MemberResponse;
+import com.MTAPizza.Sympoll.groupmanagementservice.dto.request.UserRoleChangeRequest;
+import com.MTAPizza.Sympoll.groupmanagementservice.dto.request.UserRoleCreateRequest;
+import com.MTAPizza.Sympoll.groupmanagementservice.dto.request.UserRoleDeleteRequest;
+import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.*;
 import com.MTAPizza.Sympoll.groupmanagementservice.service.GroupService;
+import com.MTAPizza.Sympoll.groupmanagementservice.service.UserRolesService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -19,8 +19,10 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/group")
 @RequiredArgsConstructor
-public class ServiceController {
+public class
+ServiceController {
     private final GroupService groupService;
+    private final UserRolesService userRolesService;
 
     /**
      * Add a new group to the database.
@@ -91,6 +93,11 @@ public class ServiceController {
         return new DeleteGroupResponse(groupService.deleteGroup(groupId));
     }
 
+    /**
+     * Verifying the given group ID exists in the database.
+     * @param groupId A group ID to verify.
+     * @return A DTO with 'isExists' boolean value.
+     */
     @GetMapping("/id")
     @ResponseStatus(HttpStatus.OK)
     public GroupIdExistsResponse checkGroupIdExists(@RequestParam String groupId) {;
@@ -103,5 +110,54 @@ public class ServiceController {
     public String HealthCheck(){
         log.info("Received a request to health check");
         return "OK";
+    }
+
+    /**
+     * Add a new role to a user in specific group.
+     * @param userRoleCreateRequest Contain the user id, group id and role name.
+     * @return A DTO object with the user id and his new role name.
+     */
+    @PostMapping("/user-role")
+    @ResponseStatus(HttpStatus.CREATED)
+    public UserRoleResponse createUserRole(@RequestBody UserRoleCreateRequest userRoleCreateRequest) {
+        log.info("Received a request to create a user role");
+        return userRolesService.createUserRole(userRoleCreateRequest.userId(), userRoleCreateRequest.groupId(), userRoleCreateRequest.roleName());
+    }
+
+    /**
+     * Return the given user's role name in specific group.
+     * @param userId Given user ID.
+     * @param groupId Given group ID.
+     * @return The name of the user's role in the given group.
+     */
+    @GetMapping("/user-role")
+    @ResponseStatus(HttpStatus.OK)
+    public String getRoleNameOfSpecificUser(@RequestParam UUID userId, @RequestParam String groupId) {
+        log.info("Received a request to get role name of specific user");
+        return userRolesService.getRoleNameOfSpecificUser(userId, groupId);
+    }
+
+    /**
+     * Change the given user's role in specific group.
+     * @param userRoleChangeRequest Contain the user id, group id and the new role name.
+     * @return The previous user's role name.
+     */
+    @PutMapping("/user-role")
+    @ResponseStatus(HttpStatus.OK)
+    public String changeUserRole(@RequestBody UserRoleChangeRequest userRoleChangeRequest) {
+        log.info("Received a request to change user role");
+        return userRolesService.changeUserRole(userRoleChangeRequest.userId(), userRoleChangeRequest.groupId(), userRoleChangeRequest.newRoleName());
+    }
+
+    /**
+     * Delete a user role from the database.
+     * @param userRoleDeleteRequest Contain the user id, group id and role name.
+     * @return A DTO with the user id and his deleted role name.
+     */
+    @DeleteMapping("/user-role")
+    @ResponseStatus(HttpStatus.OK)
+    public UserRoleDeleteResponse deleteUserRole(@RequestBody UserRoleDeleteRequest userRoleDeleteRequest) {
+        log.info("Received a request to delete user role");
+        return userRolesService.deleteUserRole(userRoleDeleteRequest.userId(), userRoleDeleteRequest.groupId(), userRoleDeleteRequest.roleName());
     }
 }
