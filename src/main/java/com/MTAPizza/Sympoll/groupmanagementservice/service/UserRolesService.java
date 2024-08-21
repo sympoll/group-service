@@ -94,4 +94,25 @@ public class UserRolesService {
         log.info("Deleted user role for {}", userId);
         return new UserRoleDeleteResponse(userId, roleService.getRole(roleName).getRoleName());
     }
+
+    /**
+     * Verifying the given user's permission to delete a poll in the group.
+     * @param userId Given user ID
+     * @param groupId Given group ID
+     * @return True value if the user has permission to delete polls in the given group. Otherwise, return false.
+     */
+    public boolean hasPermissionToDeletePoll(UUID userId, String groupId) {
+        //TODO: validation method
+        log.info("Check if user {} has permission to delete polls", userId);
+        UserRole userRole = userRoleRepository.findByUserIdAndGroupId(userId, groupId);
+        boolean result = false;
+
+        if(userRole.getRoleName().equals("Group Moderator") || userRole.getRoleName().equals("Group Admin")){
+            result = true;
+        }else {
+            //TODO: handle costume role permissions verification.
+        }
+
+        return result;
+    }
 }
