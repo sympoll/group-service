@@ -160,4 +160,11 @@ ServiceController {
         log.info("Received a request to delete user role");
         return userRolesService.deleteUserRole(userRoleDeleteRequest.userId(), userRoleDeleteRequest.groupId(), userRoleDeleteRequest.roleName());
     }
+
+    @GetMapping("/user-role/permission/delete")
+    @ResponseStatus(HttpStatus.OK)
+    public boolean checkUserPermissionToDeletePoll(@RequestParam UUID userId, @RequestParam String groupId) {
+        log.info("Received a request to check user permission to delete poll");
+        return userRolesService.hasPermissionToDeletePoll(userId, groupId);
+    }
 }
