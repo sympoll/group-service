@@ -161,6 +161,12 @@ ServiceController {
         return userRolesService.deleteUserRole(userRoleDeleteRequest.userId(), userRoleDeleteRequest.groupId(), userRoleDeleteRequest.roleName());
     }
 
+    /**
+     * Verifying the given user's permission to delete a poll in the group.
+     * @param userId Given user ID
+     * @param groupId Given group ID
+     * @return True value if the user has permission to delete polls in the given group. Otherwise, return false.
+     */
     @GetMapping("/user-role/permission/delete")
     @ResponseStatus(HttpStatus.OK)
     public boolean checkUserPermissionToDeletePoll(@RequestParam UUID userId, @RequestParam String groupId) {
