@@ -20,6 +20,7 @@ import java.util.UUID;
 @Service
 public class GroupService {
     private final GroupRepository groupRepository;
+    private final UserRolesService userRolesService;
 
     /**
      * Create and add a group to the database.
@@ -40,6 +41,13 @@ public class GroupService {
                 .description(groupCreateRequest.description())
                 .creatorId(groupCreateRequest.creatorId())
                 .build();
+
+        // Create Member object for the group creator
+        Member creator = new Member(createdGroup.getGroupId(), createdGroup.getCreatorId());
+        createdGroup.addMember(creator);
+
+        // Set the creator to be group admin
+        userRolesService.createUserRole(createdGroup.getCreatorId(), createdGroup.getGroupId(), "Group Admin");
 
         groupRepository.save(createdGroup);
         log.info("Group with ID - '{}' was created by - '{}'", createdGroup.getGroupId(), createdGroup.getCreatorId());
