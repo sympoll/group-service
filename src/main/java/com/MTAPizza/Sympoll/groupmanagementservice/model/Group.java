@@ -80,4 +80,8 @@ public class Group {
                 membersList != null ? membersList.stream().map(Member::toMemberResponse).toList() : new ArrayList<>() // Convert to member response
         );
     }
+
+    public boolean isMemberInGroup(UUID memberId) {
+        return membersList.stream().anyMatch(member -> member.getUserId().equals(memberId));
+    }
 }

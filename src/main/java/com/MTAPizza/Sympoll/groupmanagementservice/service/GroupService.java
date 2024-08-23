@@ -102,6 +102,17 @@ public class GroupService {
                 .toList();
     }
 
+    public List<GroupResponse> getGroupsByMember(UUID memberId) {
+        log.info("Retrieving groups by member from database...");
+
+        return groupRepository
+                .findAll()
+                .stream()
+                .filter(group -> group.isMemberInGroup(memberId))
+                .map(Group::toGroupResponse)
+                .toList();
+    }
+
     /**
      * Retrieves all members of a group from the database and maps them to MemberResponse DTOs.
      * @param groupId ID of the group to retrieve all of its members.
