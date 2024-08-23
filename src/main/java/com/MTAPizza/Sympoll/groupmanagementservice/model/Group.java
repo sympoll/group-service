@@ -47,6 +47,9 @@ public class Group {
     public void addMember(Member member) {
         if (!member.getGroupId().equals(groupId))
             throw new IllegalArgumentException("Invalid member received for group " + groupId + ", member's group ID is " + member.getGroupId());
+        if(membersList == null){
+            membersList = new ArrayList<>();
+        }
         membersList.add(member);
     }
 
