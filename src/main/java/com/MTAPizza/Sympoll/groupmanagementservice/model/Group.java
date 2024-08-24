@@ -38,7 +38,6 @@ public class Group {
     @OneToMany(mappedBy = "groupId", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Member> membersList = new ArrayList<>();          // Initialize to an empty members list.
 
-    // TODO: Add Admins list, will be initialized with the creatorId as the only admin.
 
     /**
      * Add a new member to the group.
