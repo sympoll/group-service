@@ -38,7 +38,6 @@ public class Group {
     @OneToMany(mappedBy = "groupId", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Member> membersList = new ArrayList<>();          // Initialize to an empty members list.
 
-    // TODO: Add Admins list, will be initialized with the creatorId as the only admin.
 
     /**
      * Add a new member to the group.
@@ -47,6 +46,9 @@ public class Group {
     public void addMember(Member member) {
         if (!member.getGroupId().equals(groupId))
             throw new IllegalArgumentException("Invalid member received for group " + groupId + ", member's group ID is " + member.getGroupId());
+        if(membersList == null){
+            membersList = new ArrayList<>();
+        }
         membersList.add(member);
     }
 
@@ -79,5 +81,9 @@ public class Group {
                 timeCreated,
                 membersList != null ? membersList.stream().map(Member::toMemberResponse).toList() : new ArrayList<>() // Convert to member response
         );
+    }
+
+    public boolean isMemberInGroup(UUID memberId) {
+        return membersList.stream().anyMatch(member -> member.getUserId().equals(memberId));
     }
 }

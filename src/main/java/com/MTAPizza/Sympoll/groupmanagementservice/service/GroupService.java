@@ -20,6 +20,8 @@ import java.util.UUID;
 @Service
 public class GroupService {
     private final GroupRepository groupRepository;
+    private final MemberService memberService;
+    private final UserRolesService userRolesService;
 
     /**
      * Create and add a group to the database.
@@ -30,12 +32,8 @@ public class GroupService {
     public GroupResponse createGroup(GroupCreateRequest groupCreateRequest) {
         log.info("Creating group {}", groupCreateRequest);
 
-        // TODO: Validate request, including checking the the group ID received (if any) is not already in the DB.
-        String groupIdReceived = groupCreateRequest.groupId();
-
-        // TODO: Add creator Id into a new list of admins
         Group createdGroup = Group.builder()
-                .groupId(groupIdReceived != null ? groupIdReceived : UUID.randomUUID().toString().replaceAll("[^0-9]", "")) // If defined a group ID then use it, otherwise generate random group ID.
+                .groupId(!groupRepository.existsById(groupCreateRequest.groupName()) ? groupCreateRequest.groupName() : UUID.randomUUID().toString().replaceAll("[^0-9]", "")) // If defined a group ID then use it, otherwise generate random group ID.
                 .groupName(groupCreateRequest.groupName())
                 .description(groupCreateRequest.description())
                 .creatorId(groupCreateRequest.creatorId())
@@ -44,8 +42,22 @@ public class GroupService {
         groupRepository.save(createdGroup);
         log.info("Group with ID - '{}' was created by - '{}'", createdGroup.getGroupId(), createdGroup.getCreatorId());
 
+        // Create Member object for the group creator
+        Member creator = new Member(createdGroup.getGroupId(), createdGroup.getCreatorId());
+        memberService.createNewMember(creator);
+        createdGroup.addMember(creator);
+        log.info("User with ID - '{}' added to the new group as a member", creator.getUserId());
+
+        // Set the creator to be group admin
+        userRolesService.createUserRole(createdGroup.getCreatorId(), createdGroup.getGroupId(), "Group Admin");
+        log.info("User with ID - '{}' set as admin in the new group", creator.getUserId());
+
+        groupRepository.save(createdGroup);
+        log.info("Group with ID - '{}' was updated with new member - '{}'", createdGroup.getGroupId(), creator.getUserId());
+
         return createdGroup.toGroupResponse();
     }
+
 
     /**
      * Add a new member to a group in the database.
@@ -55,7 +67,7 @@ public class GroupService {
      */
     @Transactional
     public MemberResponse addMember(String groupId, UUID userId) {
-        // TODO: validate the userID with the user service
+        // TODO: validate the userID with the user service and validate userId is not already member in the group
         Member newMember = new Member(groupId, userId);
 
         Group group = groupRepository.findById(groupId)
@@ -63,7 +75,7 @@ public class GroupService {
 
         group.addMember(newMember);
         groupRepository.save(group); // Save changes to the database
-        return newMember.toMemberResponse();
+        return memberService.createNewMember(newMember);
     }
 
     /**
@@ -98,6 +110,17 @@ public class GroupService {
         return groupRepository
                 .findAll()
                 .stream()
+                .map(Group::toGroupResponse)
+                .toList();
+    }
+
+    public List<GroupResponse> getGroupsByMember(UUID memberId) {
+        log.info("Retrieving groups by member from database...");
+
+        return groupRepository
+                .findAll()
+                .stream()
+                .filter(group -> group.isMemberInGroup(memberId))
                 .map(Group::toGroupResponse)
                 .toList();
     }
