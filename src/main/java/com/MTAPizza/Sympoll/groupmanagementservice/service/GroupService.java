@@ -43,16 +43,18 @@ public class GroupService {
                 .creatorId(groupCreateRequest.creatorId())
                 .build();
 
+        groupRepository.save(createdGroup);
+        log.info("Group with ID - '{}' was created by - '{}'", createdGroup.getGroupId(), createdGroup.getCreatorId());
+
         // Create Member object for the group creator
         Member creator = new Member(createdGroup.getGroupId(), createdGroup.getCreatorId());
         memberService.createNewMember(creator);
         createdGroup.addMember(creator);
+        log.info("User with ID - '{}' added to the new group as a member", creator.getUserId());
 
         // Set the creator to be group admin
         userRolesService.createUserRole(createdGroup.getCreatorId(), createdGroup.getGroupId(), "Group Admin");
-
-        groupRepository.save(createdGroup);
-        log.info("Group with ID - '{}' was created by - '{}'", createdGroup.getGroupId(), createdGroup.getCreatorId());
+        log.info("User with ID - '{}' set as admin in the new group", creator.getUserId());
 
         return createdGroup.toGroupResponse();
     }
