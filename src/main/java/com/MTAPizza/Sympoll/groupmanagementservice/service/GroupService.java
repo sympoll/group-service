@@ -20,6 +20,7 @@ import java.util.UUID;
 @Service
 public class GroupService {
     private final GroupRepository groupRepository;
+    private final MemberService memberService;
     private final UserRolesService userRolesService;
 
     /**
@@ -44,6 +45,7 @@ public class GroupService {
 
         // Create Member object for the group creator
         Member creator = new Member(createdGroup.getGroupId(), createdGroup.getCreatorId());
+        memberService.createNewMember(creator);
         createdGroup.addMember(creator);
 
         // Set the creator to be group admin
@@ -63,7 +65,7 @@ public class GroupService {
      */
     @Transactional
     public MemberResponse addMember(String groupId, UUID userId) {
-        // TODO: validate the userID with the user service
+        // TODO: validate the userID with the user service and validate userId is not already member in the group
         Member newMember = new Member(groupId, userId);
 
         Group group = groupRepository.findById(groupId)
@@ -71,7 +73,7 @@ public class GroupService {
 
         group.addMember(newMember);
         groupRepository.save(group); // Save changes to the database
-        return newMember.toMemberResponse();
+        return memberService.createNewMember(newMember);
     }
 
     /**
