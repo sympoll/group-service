@@ -56,6 +56,9 @@ public class GroupService {
         userRolesService.createUserRole(createdGroup.getCreatorId(), createdGroup.getGroupId(), "Group Admin");
         log.info("User with ID - '{}' set as admin in the new group", creator.getUserId());
 
+        groupRepository.save(createdGroup);
+        log.info("Group with ID - '{}' was updated with new member - '{}'", createdGroup.getGroupId(), creator.getUserId());
+
         return createdGroup.toGroupResponse();
     }
 
