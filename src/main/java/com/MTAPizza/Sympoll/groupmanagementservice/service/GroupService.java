@@ -31,9 +31,10 @@ public class GroupService {
     @Transactional
     public GroupResponse createGroup(GroupCreateRequest groupCreateRequest) {
         log.info("Creating group {}", groupCreateRequest);
+        String fixedSpacesGroupName = groupCreateRequest.groupName().replace(" ", "-");
 
         Group createdGroup = Group.builder()
-                .groupId(!groupRepository.existsById(groupCreateRequest.groupName()) ? groupCreateRequest.groupName() : UUID.randomUUID().toString().replaceAll("[^0-9]", "")) // If defined a group ID then use it, otherwise generate random group ID.
+                .groupId(!groupRepository.existsById(fixedSpacesGroupName) ? fixedSpacesGroupName : UUID.randomUUID().toString().replaceAll("[^0-9]", "")) // If defined a group ID then use it, otherwise generate random group ID.
                 .groupName(groupCreateRequest.groupName())
                 .description(groupCreateRequest.description())
                 .creatorId(groupCreateRequest.creatorId())
