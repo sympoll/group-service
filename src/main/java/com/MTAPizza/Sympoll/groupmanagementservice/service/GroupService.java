@@ -6,6 +6,7 @@ import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.MemberResponse;
 import com.MTAPizza.Sympoll.groupmanagementservice.exception.found.ResourceNotFoundException;
 import com.MTAPizza.Sympoll.groupmanagementservice.model.Group;
 import com.MTAPizza.Sympoll.groupmanagementservice.model.member.Member;
+import com.MTAPizza.Sympoll.groupmanagementservice.model.role.RoleName;
 import com.MTAPizza.Sympoll.groupmanagementservice.repository.GroupRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,9 +32,10 @@ public class GroupService {
     @Transactional
     public GroupResponse createGroup(GroupCreateRequest groupCreateRequest) {
         log.info("Creating group {}", groupCreateRequest);
+        String fixedSpacesGroupName = groupCreateRequest.groupName().toLowerCase().replace(" ", "-");
 
         Group createdGroup = Group.builder()
-                .groupId(!groupRepository.existsById(groupCreateRequest.groupName()) ? groupCreateRequest.groupName() : UUID.randomUUID().toString().replaceAll("[^0-9]", "")) // If defined a group ID then use it, otherwise generate random group ID.
+                .groupId(!groupRepository.existsById(fixedSpacesGroupName) ? fixedSpacesGroupName : UUID.randomUUID().toString().replaceAll("[^0-9]", "")) // If defined a group ID then use it, otherwise generate random group ID.
                 .groupName(groupCreateRequest.groupName())
                 .description(groupCreateRequest.description())
                 .creatorId(groupCreateRequest.creatorId())
@@ -49,7 +51,7 @@ public class GroupService {
         log.info("User with ID - '{}' added to the new group as a member", creator.getUserId());
 
         // Set the creator to be group admin
-        userRolesService.createUserRole(createdGroup.getCreatorId(), createdGroup.getGroupId(), "Group Admin");
+        userRolesService.createUserRole(createdGroup.getCreatorId(), createdGroup.getGroupId(), RoleName.ADMIN.toString());
         log.info("User with ID - '{}' set as admin in the new group", creator.getUserId());
 
         groupRepository.save(createdGroup);

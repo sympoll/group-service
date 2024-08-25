@@ -3,6 +3,7 @@ package com.MTAPizza.Sympoll.groupmanagementservice.service;
 
 import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.UserRoleDeleteResponse;
 import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.UserRoleResponse;
+import com.MTAPizza.Sympoll.groupmanagementservice.model.role.RoleName;
 import com.MTAPizza.Sympoll.groupmanagementservice.model.user.role.UserRole;
 import com.MTAPizza.Sympoll.groupmanagementservice.repository.UserRoleRepository;
 import lombok.RequiredArgsConstructor;
@@ -107,7 +108,7 @@ public class UserRolesService {
         UserRole userRole = userRoleRepository.findByUserIdAndGroupId(userId, groupId);
         boolean result = false;
 
-        if(userRole.getRoleName().equals("Group Moderator") || userRole.getRoleName().equals("Group Admin")){
+        if(userRole.getRoleName().equals(RoleName.MODERATOR.toString()) || userRole.getRoleName().equals(RoleName.ADMIN.toString())){
             result = true;
         }else {
             //TODO: handle costume role permissions verification.
