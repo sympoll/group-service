@@ -6,6 +6,7 @@ import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.MemberResponse;
 import com.MTAPizza.Sympoll.groupmanagementservice.exception.found.ResourceNotFoundException;
 import com.MTAPizza.Sympoll.groupmanagementservice.model.Group;
 import com.MTAPizza.Sympoll.groupmanagementservice.model.member.Member;
+import com.MTAPizza.Sympoll.groupmanagementservice.model.role.RoleName;
 import com.MTAPizza.Sympoll.groupmanagementservice.repository.GroupRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -50,7 +51,7 @@ public class GroupService {
         log.info("User with ID - '{}' added to the new group as a member", creator.getUserId());
 
         // Set the creator to be group admin
-        userRolesService.createUserRole(createdGroup.getCreatorId(), createdGroup.getGroupId(), "Group Admin");
+        userRolesService.createUserRole(createdGroup.getCreatorId(), createdGroup.getGroupId(), RoleName.ADMIN.toString());
         log.info("User with ID - '{}' set as admin in the new group", creator.getUserId());
 
         groupRepository.save(createdGroup);
