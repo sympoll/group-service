@@ -1,7 +1,9 @@
 package com.MTAPizza.Sympoll.groupmanagementservice.service;
 
+import com.MTAPizza.Sympoll.groupmanagementservice.client.UserClient;
 import com.MTAPizza.Sympoll.groupmanagementservice.dto.request.GroupCreateRequest;
 import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.GroupResponse;
+import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.MemberDetailsResponse;
 import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.MemberResponse;
 import com.MTAPizza.Sympoll.groupmanagementservice.exception.found.ResourceNotFoundException;
 import com.MTAPizza.Sympoll.groupmanagementservice.model.Group;
@@ -10,9 +12,11 @@ import com.MTAPizza.Sympoll.groupmanagementservice.model.role.RoleName;
 import com.MTAPizza.Sympoll.groupmanagementservice.repository.GroupRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -23,6 +27,7 @@ public class GroupService {
     private final GroupRepository groupRepository;
     private final MemberService memberService;
     private final UserRolesService userRolesService;
+    private final UserClient userClient;
 
     /**
      * Create and add a group to the database.
@@ -128,19 +133,25 @@ public class GroupService {
     }
 
     /**
-     * Retrieves all members of a group from the database and maps them to MemberResponse DTOs.
+     * Retrieves all members of a group (Ids and usernames) from the Member and User databases, and maps them to MemberDetailResponse DTOs.
      * @param groupId ID of the group to retrieve all of its members.
      * @return List of member information.
      */
-    public List<MemberResponse> getAllMembers(String groupId) {
+    public List<MemberDetailsResponse> getAllMembers(String groupId) {
         log.info("Retrieving all members of group {} from database...", groupId);
-        return groupRepository.findById(groupId)
+        List<MemberDetailsResponse> result = new ArrayList<>();
+        List<UUID> usersIds = groupRepository.findById(groupId)
                 .map(group -> group.getMembersList()
                         .stream()
-                        .map(Member::toMemberResponse)
-                        .toList()
-                )
+                        .map(Member::getUserId).toList())
                 .orElseThrow(() -> new IllegalArgumentException("Received invalid group ID - " + groupId));
+
+        ResponseEntity<List<MemberDetailsResponse>> response = userClient.getGroupMembersDetails(usersIds);
+        if (response.getStatusCode().is2xxSuccessful()) {
+            result = response.getBody();
+        }
+
+        return result;
     }
 
     /**

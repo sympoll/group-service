@@ -26,7 +26,6 @@ public class Member {
 
     public MemberResponse toMemberResponse() {
         return new MemberResponse(
-                userId
-        );
+                userId);
     }
 }
