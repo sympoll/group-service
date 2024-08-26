@@ -1,5 +1,6 @@
 package com.MTAPizza.Sympoll.groupmanagementservice.service;
 
+import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.MemberDetailsResponse;
 import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.MemberResponse;
 import com.MTAPizza.Sympoll.groupmanagementservice.model.member.Member;
 import com.MTAPizza.Sympoll.groupmanagementservice.repository.MemberRepository;
