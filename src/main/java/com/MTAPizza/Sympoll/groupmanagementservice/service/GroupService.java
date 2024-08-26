@@ -157,7 +157,7 @@ public class GroupService {
             Map<UUID, String> userRolesMap = userRolesService.getRolesForUsers(userIds, groupId);
 
             for (MembersUsernameResponse member : members) {
-                String roleName = userRolesMap.getOrDefault(member.userId(), "Member");
+                String roleName = userRolesMap.getOrDefault(member.userId(), "member");
                 result.add(new MemberDetailsResponse(member.userId(), member.username(), roleName));
             }
         }
