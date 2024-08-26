@@ -4,6 +4,7 @@ import com.MTAPizza.Sympoll.groupmanagementservice.client.UserClient;
 import com.MTAPizza.Sympoll.groupmanagementservice.dto.request.GroupCreateRequest;
 import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.GroupResponse;
 import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.MemberDetailsResponse;
+import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.MembersUsernameResponse;
 import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.MemberResponse;
 import com.MTAPizza.Sympoll.groupmanagementservice.exception.found.ResourceNotFoundException;
 import com.MTAPizza.Sympoll.groupmanagementservice.model.Group;
@@ -18,7 +19,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -140,15 +143,23 @@ public class GroupService {
     public List<MemberDetailsResponse> getAllMembers(String groupId) {
         log.info("Retrieving all members of group {} from database...", groupId);
         List<MemberDetailsResponse> result = new ArrayList<>();
-        List<UUID> usersIds = groupRepository.findById(groupId)
+        List<UUID> userIds = groupRepository.findById(groupId)
                 .map(group -> group.getMembersList()
                         .stream()
                         .map(Member::getUserId).toList())
                 .orElseThrow(() -> new IllegalArgumentException("Received invalid group ID - " + groupId));
 
-        ResponseEntity<List<MemberDetailsResponse>> response = userClient.getGroupMembersDetails(usersIds);
+        ResponseEntity<List<MembersUsernameResponse>> response = userClient.getGroupMembersDetails(userIds);
+
         if (response.getStatusCode().is2xxSuccessful()) {
-            result = response.getBody();
+            List<MembersUsernameResponse> members = response.getBody();
+            // Fetch roles for all users
+            Map<UUID, String> userRolesMap = userRolesService.getRolesForUsers(userIds, groupId);
+
+            for (MembersUsernameResponse member : members) {
+                String roleName = userRolesMap.getOrDefault(member.userId(), "Member");
+                result.add(new MemberDetailsResponse(member.userId(), member.username(), roleName));
+            }
         }
 
         return result;
