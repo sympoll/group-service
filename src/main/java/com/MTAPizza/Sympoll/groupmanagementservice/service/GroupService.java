@@ -191,6 +191,11 @@ public class GroupService {
         return groupRepository.existsById(groupId);
     }
 
+    /**
+     * Fetch and return the group details by ID.
+     * @param groupId The given group ID.
+     * @return Full information of the group.
+     */
     public GroupResponse getGroupById(String groupId) {
         // TODO: validation method
         log.info("Retrieving group with ID - '{}'", groupId);

@@ -181,6 +181,11 @@ ServiceController {
         return userRolesService.hasPermissionToDeletePoll(userId, groupId);
     }
 
+    /**
+     * Fetch and return the group details by ID.
+     * @param groupId The given group ID.
+     * @return Full information of the group.
+     */
     @GetMapping("/by-group-id")
     @ResponseStatus(HttpStatus.OK)
     public GroupResponse getGroupById(@RequestParam String groupId) {
