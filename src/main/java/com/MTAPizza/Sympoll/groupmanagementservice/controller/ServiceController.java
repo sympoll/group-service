@@ -19,7 +19,6 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/group")
 @RequiredArgsConstructor
-@CrossOrigin
 public class
 ServiceController {
     private final GroupService groupService;
