@@ -16,12 +16,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -189,5 +189,11 @@ public class GroupService {
     public boolean checkGroupIdExists(String groupId) {
         log.info("Checking if group with ID - '{}' exists", groupId);
         return groupRepository.existsById(groupId);
+    }
+
+    public GroupResponse getGroupById(String groupId) {
+        // TODO: validation method
+        log.info("Retrieving group with ID - '{}'", groupId);
+        return groupRepository.getReferenceById(groupId).toGroupResponse();
     }
 }
