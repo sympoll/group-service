@@ -2,10 +2,7 @@ package com.MTAPizza.Sympoll.groupmanagementservice.service;
 
 import com.MTAPizza.Sympoll.groupmanagementservice.client.UserClient;
 import com.MTAPizza.Sympoll.groupmanagementservice.dto.request.GroupCreateRequest;
-import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.GroupResponse;
-import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.MemberDetailsResponse;
-import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.MembersUsernameResponse;
-import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.MemberResponse;
+import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.*;
 import com.MTAPizza.Sympoll.groupmanagementservice.exception.found.ResourceNotFoundException;
 import com.MTAPizza.Sympoll.groupmanagementservice.model.Group;
 import com.MTAPizza.Sympoll.groupmanagementservice.model.member.Member;
@@ -16,12 +13,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -189,5 +186,16 @@ public class GroupService {
     public boolean checkGroupIdExists(String groupId) {
         log.info("Checking if group with ID - '{}' exists", groupId);
         return groupRepository.existsById(groupId);
+    }
+
+    /**
+     * Fetch and return the group details by ID.
+     * @param groupId The given group ID.
+     * @return Information of the group.
+     */
+    public GroupNameResponse getGroupById(String groupId) {
+        // TODO: validation method
+        log.info("Retrieving group with ID - '{}'", groupId);
+        return groupRepository.getReferenceById(groupId).toGroupNameResponse();
     }
 }

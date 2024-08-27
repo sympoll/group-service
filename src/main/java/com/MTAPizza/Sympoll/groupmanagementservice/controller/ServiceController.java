@@ -180,4 +180,16 @@ ServiceController {
         log.info("Received a request to check user permission to delete poll");
         return userRolesService.hasPermissionToDeletePoll(userId, groupId);
     }
+
+    /**
+     * Fetch and return the group details by ID.
+     * @param groupId The given group ID.
+     * @return Information of the group.
+     */
+    @GetMapping("/by-group-id")
+    @ResponseStatus(HttpStatus.OK)
+    public GroupNameResponse getGroupById(@RequestParam String groupId) {
+        log.info("Received a request to get group by id {}", groupId);
+        return groupService.getGroupById(groupId);
+    }
 }

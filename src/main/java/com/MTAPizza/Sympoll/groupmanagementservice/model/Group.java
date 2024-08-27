@@ -1,5 +1,6 @@
 package com.MTAPizza.Sympoll.groupmanagementservice.model;
 
+import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.GroupNameResponse;
 import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.GroupResponse;
 import com.MTAPizza.Sympoll.groupmanagementservice.model.member.Member;
 import jakarta.persistence.*;
@@ -80,6 +81,13 @@ public class Group {
                 creatorId,
                 timeCreated,
                 membersList != null ? membersList.stream().map(Member::toMemberResponse).toList() : new ArrayList<>() // Convert to member response
+        );
+    }
+
+    public GroupNameResponse toGroupNameResponse() {
+        return new GroupNameResponse(
+                groupId,
+                groupName
         );
     }
 
