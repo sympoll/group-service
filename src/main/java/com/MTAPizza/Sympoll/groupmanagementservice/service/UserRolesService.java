@@ -10,7 +10,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -50,8 +53,13 @@ public class UserRolesService {
     public String getRoleNameOfSpecificUser(UUID userId, String groupId) {
         //TODO: validation method
         log.info("Get role name for {}", userId);
-        String roleName = userRoleRepository.findByUserIdAndGroupId(userId, groupId).getRoleName();
-        return roleService.getRole(roleName).getRoleName();
+        return userRoleRepository.findByUserIdAndGroupId(userId, groupId).getRoleName();
+    }
+
+    public Map<UUID, String> getRolesForUsers(List<UUID> userIds, String groupId) {
+        List<UserRole> userRoles = userRoleRepository.findByUserIdInAndGroupId(userIds, groupId);
+        return userRoles.stream()
+                .collect(Collectors.toMap(UserRole::getUserId, UserRole::getRoleName));
     }
 
     /**
