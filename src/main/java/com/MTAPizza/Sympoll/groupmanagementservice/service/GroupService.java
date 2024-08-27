@@ -2,10 +2,7 @@ package com.MTAPizza.Sympoll.groupmanagementservice.service;
 
 import com.MTAPizza.Sympoll.groupmanagementservice.client.UserClient;
 import com.MTAPizza.Sympoll.groupmanagementservice.dto.request.GroupCreateRequest;
-import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.GroupResponse;
-import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.MemberDetailsResponse;
-import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.MembersUsernameResponse;
-import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.MemberResponse;
+import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.*;
 import com.MTAPizza.Sympoll.groupmanagementservice.exception.found.ResourceNotFoundException;
 import com.MTAPizza.Sympoll.groupmanagementservice.model.Group;
 import com.MTAPizza.Sympoll.groupmanagementservice.model.member.Member;
@@ -194,11 +191,11 @@ public class GroupService {
     /**
      * Fetch and return the group details by ID.
      * @param groupId The given group ID.
-     * @return Full information of the group.
+     * @return Information of the group.
      */
-    public GroupResponse getGroupById(String groupId) {
+    public GroupNameResponse getGroupById(String groupId) {
         // TODO: validation method
         log.info("Retrieving group with ID - '{}'", groupId);
-        return groupRepository.getReferenceById(groupId).toGroupResponse();
+        return groupRepository.getReferenceById(groupId).toGroupNameResponse();
     }
 }
