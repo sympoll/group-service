@@ -8,6 +8,7 @@ import com.MTAPizza.Sympoll.groupmanagementservice.model.Group;
 import com.MTAPizza.Sympoll.groupmanagementservice.model.member.Member;
 import com.MTAPizza.Sympoll.groupmanagementservice.model.role.RoleName;
 import com.MTAPizza.Sympoll.groupmanagementservice.repository.GroupRepository;
+import com.MTAPizza.Sympoll.groupmanagementservice.validator.Validator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -15,10 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -28,6 +26,7 @@ public class GroupService {
     private final MemberService memberService;
     private final UserRolesService userRolesService;
     private final UserClient userClient;
+    private final Validator validator;
 
     /**
      * Create and add a group to the database.
@@ -36,6 +35,8 @@ public class GroupService {
      */
     @Transactional
     public GroupResponse createGroup(GroupCreateRequest groupCreateRequest) {
+        validator.validateNewGroup(groupCreateRequest);
+
         log.info("Creating group {}", groupCreateRequest);
         String fixedSpacesGroupName = groupCreateRequest.groupName().toLowerCase().replace(" ", "-");
 
@@ -74,11 +75,10 @@ public class GroupService {
      */
     @Transactional
     public MemberResponse addMember(String groupId, UUID userId) {
-        // TODO: validate the userID with the user service and validate userId is not already member in the group
+        validator.validateAddMember(groupId, userId);
         Member newMember = new Member(groupId, userId);
 
-        Group group = groupRepository.findById(groupId)
-                .orElseThrow(() -> new ResourceNotFoundException("Group with ID " + groupId + " not found."));
+        Group group = groupRepository.getReferenceById(groupId);
 
         group.addMember(newMember);
         groupRepository.save(group); // Save changes to the database
@@ -93,13 +93,9 @@ public class GroupService {
      */
     @Transactional
     public MemberResponse removeMember(String groupId, UUID userId) {
-        Group group = groupRepository.findById(groupId)
-                .orElseThrow(() -> new IllegalArgumentException("Could not remove member with ID " + userId + ", Group with ID " + groupId + " not found."));
-
+        validator.validateRemoveMember(groupId, userId);
+        Group group = groupRepository.getReferenceById(groupId);
         Member memberToRemove = group.getMember(userId);
-        if (memberToRemove == null) {
-            throw new IllegalArgumentException("Could not remove member with ID " + userId + ", member not found.");
-        }
 
         group.removeMember(userId);
         groupRepository.save(group); // Save changes to the database
@@ -122,6 +118,7 @@ public class GroupService {
     }
 
     public List<GroupResponse> getGroupsByMember(UUID memberId) {
+        validator.validateGetGroupByMember(memberId);
         log.info("Retrieving groups by member from database...");
 
         return groupRepository
@@ -138,13 +135,14 @@ public class GroupService {
      * @return List of member information.
      */
     public List<MemberDetailsResponse> getAllMembers(String groupId) {
+        validator.validateGetAllMembers(groupId);
         log.info("Retrieving all members of group {} from database...", groupId);
         List<MemberDetailsResponse> result = new ArrayList<>();
         List<UUID> userIds = groupRepository.findById(groupId)
                 .map(group -> group.getMembersList()
                         .stream()
                         .map(Member::getUserId).toList())
-                .orElseThrow(() -> new IllegalArgumentException("Received invalid group ID - " + groupId));
+                .orElse(Collections.emptyList());
 
         ResponseEntity<List<MembersUsernameResponse>> response = userClient.getGroupMembersDetails(userIds);
 
@@ -168,9 +166,8 @@ public class GroupService {
      * @return The ID of the group that was deleted.
      */
     public String deleteGroup(String groupId) {
+        validator.validateDeleteGroup(groupId);
         log.info("Deleting group with ID - '{}'", groupId);
-        Group group = groupRepository.findById(groupId)
-                .orElseThrow(() -> new IllegalArgumentException("Received invalid group ID - " + groupId));
 
         groupRepository.deleteById(groupId);
         log.info("Deleted group with ID - '{}'", groupId);
@@ -194,7 +191,7 @@ public class GroupService {
      * @return Information of the group.
      */
     public GroupNameResponse getGroupById(String groupId) {
-        // TODO: validation method
+        validator.validateGetGroupById(groupId);
         log.info("Retrieving group with ID - '{}'", groupId);
         return groupRepository.getReferenceById(groupId).toGroupNameResponse();
     }
