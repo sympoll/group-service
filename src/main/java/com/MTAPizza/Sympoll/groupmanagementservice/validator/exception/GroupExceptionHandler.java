@@ -45,6 +45,6 @@ public class GroupExceptionHandler {
      */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<GeneralGroupError> handleUserNotMemberException(Exception ex, WebRequest request) {
-        return new ResponseEntity<>(new GeneralGroupError(ex.getMessage()), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(new GeneralGroupError(ex.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
