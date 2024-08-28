@@ -3,7 +3,6 @@ package com.MTAPizza.Sympoll.groupmanagementservice.service;
 import com.MTAPizza.Sympoll.groupmanagementservice.client.UserClient;
 import com.MTAPizza.Sympoll.groupmanagementservice.dto.request.GroupCreateRequest;
 import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.*;
-import com.MTAPizza.Sympoll.groupmanagementservice.exception.found.ResourceNotFoundException;
 import com.MTAPizza.Sympoll.groupmanagementservice.model.Group;
 import com.MTAPizza.Sympoll.groupmanagementservice.model.member.Member;
 import com.MTAPizza.Sympoll.groupmanagementservice.model.role.RoleName;
@@ -14,7 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.*;
 
@@ -35,7 +33,7 @@ public class GroupService {
      */
     @Transactional
     public GroupResponse createGroup(GroupCreateRequest groupCreateRequest) {
-        validator.validateNewGroup(groupCreateRequest);
+        validator.validateCreateNewGroup(groupCreateRequest);
 
         log.info("Creating group {}", groupCreateRequest);
         String fixedSpacesGroupName = groupCreateRequest.groupName().toLowerCase().replace(" ", "-");
