@@ -58,6 +58,12 @@ public class UserRolesService {
         return userRoleRepository.findByUserIdAndGroupId(userId, groupId).getRoleName();
     }
 
+    /**
+     * Fetch roles for each given member of the group.
+     * @param userIds List of the group members IDs.
+     * @param groupId The given group ID.
+     * @return Map of member ID and the member's role in the group.
+     */
     public Map<UUID, String> getRolesForUsers(List<UUID> userIds, String groupId) {
         validator.validateGetRolesForUsers(userIds, groupId);
         List<UserRole> userRoles = userRoleRepository.findByUserIdInAndGroupId(userIds, groupId);
