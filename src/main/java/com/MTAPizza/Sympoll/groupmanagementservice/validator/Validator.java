@@ -97,7 +97,7 @@ public class Validator {
         log.info("Sending validating request to user service");
         ResponseEntity<UserIdExistsResponse> response = userClient.checkUserIdExists(userId);
 
-        if (!response.getStatusCode().is2xxSuccessful()) {
+        if (response.getStatusCode().is2xxSuccessful()) {
             if (!response.getBody().isExists()) {
                 log.info("User {} does not exist", userId);
                 throw new ResourceNotFoundException("User " + userId + " does not exist");
