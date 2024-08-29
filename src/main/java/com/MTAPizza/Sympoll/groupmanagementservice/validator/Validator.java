@@ -97,7 +97,7 @@ public class Validator {
 
         if (!response.getStatusCode().is2xxSuccessful()) {
             if (!response.getBody().isExists()) {
-                log.warn("User {} does not exist", userId);
+                log.info("User {} does not exist", userId);
                 throw new ResourceNotFoundException("User " + userId + " does not exist");
             }
         }
@@ -105,28 +105,28 @@ public class Validator {
 
     private void validateGroupIdExists(String groupId) {
         if(!groupRepository.existsById(groupId)) {
-            log.warn("Group {} does not exist", groupId);
+            log.info("Group {} does not exist", groupId);
             throw new ResourceNotFoundException("Group " + groupId + " does not exist");
         }
     }
 
     private void validateUserAlreadyMember(String groupId, UUID userId) {
         if(!memberRepository.existsByGroupIdAndUserId(groupId, userId)) {
-            log.warn("User {} already member of group {}", userId, groupId);
+            log.info("User {} already member of group {}", userId, groupId);
             throw new UserAlreadyMemberException("User " + userId + " already member of group " + groupId);
         }
     }
 
     private void validateUserIsGroupMember(String groupId, UUID userId) {
         if(!memberRepository.existsByGroupIdAndUserId(groupId, userId)) {
-            log.warn("User {} is not a member of group {}", userId, groupId);
+            log.info("User {} is not a member of group {}", userId, groupId);
             throw new UserNotMemberException("User " + userId + " is not a member of group " + groupId);
         }
     }
 
     private void validateRoleNameExists(String roleName) {
         if(!roleRepository.existsById(roleName)) {
-            log.warn("Role {} does not exist", roleName);
+            log.info("Role {} does not exist", roleName);
             throw new ResourceNotFoundException("Role " + roleName + " does not exist");
         }
     }
