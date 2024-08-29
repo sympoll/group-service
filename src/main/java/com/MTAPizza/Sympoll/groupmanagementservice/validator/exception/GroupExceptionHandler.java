@@ -7,6 +7,7 @@ import com.MTAPizza.Sympoll.groupmanagementservice.dto.error.UserNotMemberError;
 import com.MTAPizza.Sympoll.groupmanagementservice.exception.found.ResourceNotFoundException;
 import com.MTAPizza.Sympoll.groupmanagementservice.exception.member.UserAlreadyMemberException;
 import com.MTAPizza.Sympoll.groupmanagementservice.exception.member.UserNotMemberException;
+import com.MTAPizza.Sympoll.groupmanagementservice.exception.request.RequestFailedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -38,6 +39,14 @@ public class GroupExceptionHandler {
     @ExceptionHandler(UserNotMemberException.class)
     public ResponseEntity<UserNotMemberError> handleUserNotMemberException(UserNotMemberException ex, WebRequest request) {
         return new ResponseEntity<>(new UserNotMemberError(ex.getMessage()), HttpStatus.BAD_REQUEST);
+    }
+
+    /**
+     * Handles request failed exceptions
+     */
+    @ExceptionHandler(RequestFailedException.class)
+    public ResponseEntity<ResourceNotFoundError> handleUserNotMemberException(RequestFailedException ex, WebRequest request) {
+        return new ResponseEntity<>(new ResourceNotFoundError(ex.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     /**
