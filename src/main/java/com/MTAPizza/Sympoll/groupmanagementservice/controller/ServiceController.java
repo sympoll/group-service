@@ -76,9 +76,9 @@ ServiceController {
 
     @GetMapping("/by-member-id")
     @ResponseStatus(HttpStatus.OK)
-    public List<GroupResponse> getGroupsByMemberId(@RequestParam("memberId") UUID memberId) {
-        log.info("Received request to get groups by member id {}", memberId);
-        return groupService.getGroupsByMember(memberId);
+    public List<GroupResponse> getGroupsByMemberId(@RequestParam UUID userrId) {
+        log.info("Received request to get groups by member id {}", userrId);
+        return groupService.getGroupsByMember(userrId);
     }
 
     @GetMapping("/members")
