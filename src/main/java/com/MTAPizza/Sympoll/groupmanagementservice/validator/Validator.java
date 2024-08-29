@@ -93,6 +93,7 @@ public class Validator {
     }
 
     private void validateUserId(UUID userId) {
+        log.info("Validator sending request to user service");
         ResponseEntity<UserIdExistsResponse> response = userClient.checkUserIdExists(userId);
 
         if (!response.getStatusCode().is2xxSuccessful()) {
