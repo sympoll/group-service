@@ -6,6 +6,7 @@ import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.UserRoleResponse
 import com.MTAPizza.Sympoll.groupmanagementservice.model.role.RoleName;
 import com.MTAPizza.Sympoll.groupmanagementservice.model.user.role.UserRole;
 import com.MTAPizza.Sympoll.groupmanagementservice.repository.UserRoleRepository;
+import com.MTAPizza.Sympoll.groupmanagementservice.validator.Validator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,7 @@ import java.util.stream.Collectors;
 public class UserRolesService {
     private final UserRoleRepository userRoleRepository;
     private final RoleService roleService;
+    private final Validator validator;
 
     /**
      * Add a new role to a user in specific group.
@@ -30,7 +32,7 @@ public class UserRolesService {
      * @return A DTO object with the user id and his new role name.
      */
     public UserRoleResponse createUserRole(UUID userId, String groupId, String roleName) {
-        //TODO: validation method
+        validator.validateCreateUserRole(groupId, userId, roleName);
         log.info("Create user role for {}", userId);
 
         UserRole createdUserRole = UserRole.builder()
@@ -51,22 +53,23 @@ public class UserRolesService {
      * @return The name of the user's role in the given group.
      */
     public String getRoleNameOfSpecificUser(UUID userId, String groupId) {
-        //TODO: validation method
+        validator.validateGetRoleNameOfSpecificUser(userId, groupId);
         log.info("Get role name for {}", userId);
         return userRoleRepository.findByUserIdAndGroupId(userId, groupId).getRoleName();
     }
 
+    /**
+     * Fetch roles for each given member of the group.
+     * @param userIds List of the group members IDs.
+     * @param groupId The given group ID.
+     * @return Map of member ID and the member's role in the group.
+     */
     public Map<UUID, String> getRolesForUsers(List<UUID> userIds, String groupId) {
+        validator.validateGetRolesForUsers(userIds, groupId);
         List<UserRole> userRoles = userRoleRepository.findByUserIdInAndGroupId(userIds, groupId);
         return userRoles.stream()
                 .collect(Collectors.toMap(UserRole::getUserId, UserRole::getRoleName));
     }
-
-    /**
-     *
-     * @param userRoleChangeRequest Contain the user id, group id and the new role name.
-     * @return
-     */
 
     /**
      * Change the given user's role in specific group.
@@ -76,7 +79,7 @@ public class UserRolesService {
      * @return The previous user's role name.
      */
     public String changeUserRole(UUID userId, String groupId, String newRoleName) {
-        //TODO: validation method
+        validator.validateChangeUserRole(groupId, userId, newRoleName);
         String previousRoleName;
 
         log.info("Change user role for {}", userId);
@@ -96,7 +99,7 @@ public class UserRolesService {
      * @return A DTO with the user id and his deleted role name.
      */
     public UserRoleDeleteResponse deleteUserRole(UUID userId, String groupId, String roleName) {
-        //TODO: validation method
+        validator.validateDeleteUserRole(groupId, userId, roleName);
         log.info("Delete user role for {}", userId);
         UserRole userRole = userRoleRepository.findByUserIdAndGroupId(userId, groupId);
         userRoleRepository.delete(userRole);
@@ -111,7 +114,7 @@ public class UserRolesService {
      * @return True value if the user has permission to delete polls in the given group. Otherwise, return false.
      */
     public boolean hasPermissionToDeletePoll(UUID userId, String groupId) {
-        //TODO: validation method
+        validator.validateHasPermissionToDeletePoll(groupId, userId);
         log.info("Check if user {} has permission to delete polls", userId);
         UserRole userRole = userRoleRepository.findByUserIdAndGroupId(userId, groupId);
         boolean result = false;

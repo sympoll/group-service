@@ -9,4 +9,5 @@ import java.util.UUID;
 
 @Repository
 public interface MemberRepository extends JpaRepository<Member, MemberId> {
+    boolean existsByGroupIdAndUserId(String groupId, UUID userId);
 }
