@@ -14,5 +14,5 @@ public interface UserClient {
     ResponseEntity<List<MembersUsernameResponse>> getGroupMembersDetails(@RequestParam List<UUID> userIds);
 
     @GetExchange("/api/user/id")
-    ResponseEntity<UserIdExistsResponse> checkUserIdExists(@RequestParam UUID id);
+    ResponseEntity<UserIdExistsResponse> checkUserIdExists(@RequestParam UUID userId);
 }

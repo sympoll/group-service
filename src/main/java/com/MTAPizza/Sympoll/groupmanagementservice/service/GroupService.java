@@ -142,6 +142,7 @@ public class GroupService {
                         .map(Member::getUserId).toList())
                 .orElse(Collections.emptyList());
 
+        log.info("Sending request to get member usernames from user service");
         ResponseEntity<List<MembersUsernameResponse>> response = userClient.getGroupMembersDetails(userIds);
 
         if (response.getStatusCode().is2xxSuccessful()) {
