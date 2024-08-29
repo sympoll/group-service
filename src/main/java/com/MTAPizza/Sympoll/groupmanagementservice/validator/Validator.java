@@ -6,6 +6,7 @@ import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.UserIdExistsResp
 import com.MTAPizza.Sympoll.groupmanagementservice.exception.found.ResourceNotFoundException;
 import com.MTAPizza.Sympoll.groupmanagementservice.exception.member.UserAlreadyMemberException;
 import com.MTAPizza.Sympoll.groupmanagementservice.exception.member.UserNotMemberException;
+import com.MTAPizza.Sympoll.groupmanagementservice.exception.request.RequestFailedException;
 import com.MTAPizza.Sympoll.groupmanagementservice.repository.GroupRepository;
 import com.MTAPizza.Sympoll.groupmanagementservice.repository.MemberRepository;
 import com.MTAPizza.Sympoll.groupmanagementservice.repository.RoleRepository;
@@ -101,6 +102,9 @@ public class Validator {
                 log.info("User {} does not exist", userId);
                 throw new ResourceNotFoundException("User " + userId + " does not exist");
             }
+        } else {
+            log.error("Request to user service with user id '{}' failed. Status code {}", userId, response.getStatusCode());
+            throw new RequestFailedException("Request to user service failed. Status code " + response.getStatusCode());
         }
     }
 

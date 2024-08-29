@@ -3,6 +3,7 @@ package com.MTAPizza.Sympoll.groupmanagementservice.service;
 import com.MTAPizza.Sympoll.groupmanagementservice.client.UserClient;
 import com.MTAPizza.Sympoll.groupmanagementservice.dto.request.GroupCreateRequest;
 import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.*;
+import com.MTAPizza.Sympoll.groupmanagementservice.exception.request.RequestFailedException;
 import com.MTAPizza.Sympoll.groupmanagementservice.model.Group;
 import com.MTAPizza.Sympoll.groupmanagementservice.model.member.Member;
 import com.MTAPizza.Sympoll.groupmanagementservice.model.role.RoleName;
@@ -154,6 +155,9 @@ public class GroupService {
                 String roleName = userRolesMap.getOrDefault(member.userId(), "Member");
                 result.add(new MemberDetailsResponse(member.userId(), member.username(), roleName));
             }
+        } else {
+            log.error("Request to user service failed. Status code {}", response.getStatusCode());
+            throw new RequestFailedException("Request to user service failed. Status code " + response.getStatusCode());
         }
 
         return result;
