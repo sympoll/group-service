@@ -119,9 +119,9 @@ public class GroupService {
         Member randomMember = membersWithoutTheAdmin.get(random.nextInt(membersWithoutTheAdmin.size()));
 
         if(userRolesService.isMemberHasRole(randomMember.getUserId(),groupId)) {
-            userRolesService.createUserRole(randomMember.getUserId(),groupId,RoleName.ADMIN.toString());
-        } else {
             userRolesService.changeUserRole(randomMember.getUserId(),groupId,RoleName.ADMIN.toString());
+        } else {
+            userRolesService.createUserRole(randomMember.getUserId(),groupId,RoleName.ADMIN.toString());
         }
     }
 
