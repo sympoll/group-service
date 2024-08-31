@@ -116,7 +116,7 @@ public class Validator {
     }
 
     private void validateUserAlreadyMember(String groupId, UUID userId) {
-        if(!memberRepository.existsByGroupIdAndUserId(groupId, userId)) {
+        if(memberRepository.existsByGroupIdAndUserId(groupId, userId)) {
             log.info("User {} already member of group {}", userId, groupId);
             throw new UserAlreadyMemberException("User " + userId + " already member of group " + groupId);
         }
