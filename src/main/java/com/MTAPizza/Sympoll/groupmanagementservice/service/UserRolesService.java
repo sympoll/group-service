@@ -55,6 +55,7 @@ public class UserRolesService {
     public String getRoleNameOfSpecificUser(UUID userId, String groupId) {
         validator.validateGetRoleNameOfSpecificUser(userId, groupId);
         log.info("Get role name for {}", userId);
+        log.info("Roles: {}", userRoleRepository.findAll());
         return userRoleRepository.findByUserIdAndGroupId(userId, groupId).getRoleName();
     }
 
