@@ -6,6 +6,7 @@ import com.MTAPizza.Sympoll.groupmanagementservice.dto.request.UserRoleCreateReq
 import com.MTAPizza.Sympoll.groupmanagementservice.dto.request.UserRoleDeleteRequest;
 import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.*;
 import com.MTAPizza.Sympoll.groupmanagementservice.service.GroupService;
+import com.MTAPizza.Sympoll.groupmanagementservice.service.MemberService;
 import com.MTAPizza.Sympoll.groupmanagementservice.service.UserRolesService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +24,7 @@ public class
 ServiceController {
     private final GroupService groupService;
     private final UserRolesService userRolesService;
+    private final MemberService memberService;
 
     /**
      * Add a new group to the database.
@@ -191,5 +193,12 @@ ServiceController {
     public GroupNameResponse getGroupById(@RequestParam String groupId) {
         log.info("Received a request to get group by id {}", groupId);
         return groupService.getGroupById(groupId);
+    }
+
+    @GetMapping("/all-user-groups")
+    @ResponseStatus(HttpStatus.OK)
+    public UserGroupsResponse getAllUserGroups(@RequestParam UUID userId) {
+        log.info("Received request to get all group ids of use {}", userId);
+        return memberService.getAllUserGroups(userId);
     }
 }
