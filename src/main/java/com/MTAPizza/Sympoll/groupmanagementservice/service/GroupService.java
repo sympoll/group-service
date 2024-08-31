@@ -189,13 +189,23 @@ public class GroupService {
     }
 
     /**
-     * Fetch and return the group details by ID.
+     * Fetch and return the group name by ID.
      * @param groupId The given group ID.
      * @return Information of the group.
      */
-    public GroupNameResponse getGroupById(String groupId) {
+    public GroupNameResponse getGroupNameById(String groupId) {
         validator.validateGetGroupById(groupId);
-        log.info("Retrieving group with ID - '{}'", groupId);
+        log.info("Retrieving group name with ID - '{}'", groupId);
         return groupRepository.getReferenceById(groupId).toGroupNameResponse();
+    }
+
+    /**
+     * Fetch and return the group detail by ID.
+     * @param groupId The given group ID.
+     * @return Information of the group.
+     */
+    public GroupResponse getGroupById(String groupId) {
+        log.info("Retrieving group with ID - '{}'", groupId);
+        return groupRepository.getReferenceById(groupId).toGroupResponse();
     }
 }

@@ -182,13 +182,25 @@ ServiceController {
     }
 
     /**
+     * Fetch and return the group name by ID.
+     * @param groupId The given group ID.
+     * @return Information of the group.
+     */
+    @GetMapping("/name/by-group-id")
+    @ResponseStatus(HttpStatus.OK)
+    public GroupNameResponse getGroupNameById(@RequestParam String groupId) {
+        log.info("Received a request to get group name by id {}", groupId);
+        return groupService.getGroupNameById(groupId);
+    }
+
+    /**
      * Fetch and return the group details by ID.
      * @param groupId The given group ID.
      * @return Information of the group.
      */
     @GetMapping("/by-group-id")
     @ResponseStatus(HttpStatus.OK)
-    public GroupNameResponse getGroupById(@RequestParam String groupId) {
+    public GroupResponse getGroupById(@RequestParam String groupId) {
         log.info("Received a request to get group by id {}", groupId);
         return groupService.getGroupById(groupId);
     }
