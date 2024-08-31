@@ -115,6 +115,7 @@ public class GroupService {
     private void setRandomlyNewAdmin(List<Member> groupMembers, String groupId, UUID removedUserId) {
         Random random = new Random();
         List<Member> membersWithoutTheAdmin = groupMembers.stream().filter(member -> member.getUserId() != removedUserId).toList();
+        log.info("Members without admin: {}", membersWithoutTheAdmin);
         Member randomMember = membersWithoutTheAdmin.get(random.nextInt(membersWithoutTheAdmin.size()));
 
         if(userRolesService.isMemberHasRole(randomMember.getUserId(),groupId)) {
