@@ -12,4 +12,6 @@ import java.util.UUID;
 public interface UserRoleRepository extends JpaRepository<UserRole, UserRoleId> {
     UserRole findByUserIdAndGroupId(UUID userId, String groupId);
     List<UserRole> findByUserIdInAndGroupId(List<UUID> userIds, String groupId);
+    List<UserRole> findByGroupId(String groupId);
+    boolean existsByUserIdAndGroupId(UUID userId, String groupId);
 }
