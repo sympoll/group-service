@@ -95,11 +95,33 @@ public class GroupService {
         validator.validateRemoveMember(groupId, userId);
         Group group = groupRepository.getReferenceById(groupId);
         Member memberToRemove = group.getMember(userId);
+        String userRoleName = userRolesService.getRoleNameOfSpecificUser(userId, groupId);
+
+        if (group.getMembersList().size() == 1) {
+            deleteGroup(groupId);
+            return memberToRemove.toMemberResponse();
+        }
+        // Make sure the group remain with an admin.
+        if (userRoleName.equals(RoleName.ADMIN.toString()) && userRolesService.isOnlyOneAdmin(groupId)) {
+            setRandomlyNewAdmin(group.getMembersList(), groupId, userId);
+        }
 
         group.removeMember(userId);
-        groupRepository.save(group); // Save changes to the database
+        groupRepository.save(group);
 
         return memberToRemove.toMemberResponse();
+    }
+
+    private void setRandomlyNewAdmin(List<Member> groupMembers, String groupId, UUID removedUserId) {
+        Random random = new Random();
+        List<Member> membersWithoutTheAdmin = groupMembers.stream().filter(member -> !member.getUserId().equals(removedUserId)).toList();
+        Member randomMember = membersWithoutTheAdmin.get(random.nextInt(membersWithoutTheAdmin.size()));
+
+        if(userRolesService.isMemberHasRole(randomMember.getUserId(),groupId)) {
+            userRolesService.changeUserRole(randomMember.getUserId(),groupId,RoleName.ADMIN.toString());
+        } else {
+            userRolesService.createUserRole(randomMember.getUserId(),groupId,RoleName.ADMIN.toString());
+        }
     }
 
     /**
@@ -189,13 +211,23 @@ public class GroupService {
     }
 
     /**
-     * Fetch and return the group details by ID.
+     * Fetch and return the group name by ID.
      * @param groupId The given group ID.
      * @return Information of the group.
      */
-    public GroupNameResponse getGroupById(String groupId) {
+    public GroupNameResponse getGroupNameById(String groupId) {
         validator.validateGetGroupById(groupId);
-        log.info("Retrieving group with ID - '{}'", groupId);
+        log.info("Retrieving group name with ID - '{}'", groupId);
         return groupRepository.getReferenceById(groupId).toGroupNameResponse();
+    }
+
+    /**
+     * Fetch and return the group detail by ID.
+     * @param groupId The given group ID.
+     * @return Information of the group.
+     */
+    public GroupResponse getGroupById(String groupId) {
+        log.info("Retrieving group with ID - '{}'", groupId);
+        return groupRepository.getReferenceById(groupId).toGroupResponse();
     }
 }

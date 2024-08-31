@@ -127,4 +127,20 @@ public class UserRolesService {
 
         return result;
     }
+
+    public boolean isOnlyOneAdmin(String groupId) {
+        log.info("Check if there is only one admin in the group");
+        List<UserRole> groupRoles = userRoleRepository.findByGroupId(groupId);
+
+        long adminsCount = groupRoles.stream()
+                .filter(userRole -> userRole.getRoleName().equals(RoleName.ADMIN.toString()))
+                .count();
+
+        return adminsCount == 1;
+    }
+
+    public boolean isMemberHasRole(UUID userId, String groupId) {
+        log.info("Check if user {} has role in group {}", userId, groupId);
+        return userRoleRepository.existsByUserIdAndGroupId(userId, groupId);
+    }
 }
