@@ -65,11 +65,6 @@ public class Validator {
         validateRoleNameExists(roleName);
     }
 
-    public void  validateGetRoleNameOfSpecificUser (UUID userId, String groupId) {
-        validateGroupIdExists(groupId);
-        validateUserId(userId);
-    }
-
     public void validateGetRolesForUsers(List<UUID> userIds, String groupId) {
         validateUserIdsList(userIds);
         validateGroupIdExists(groupId);

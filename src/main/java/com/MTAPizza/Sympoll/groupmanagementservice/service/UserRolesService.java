@@ -53,9 +53,14 @@ public class UserRolesService {
      * @return The name of the user's role in the given group.
      */
     public String getRoleNameOfSpecificUser(UUID userId, String groupId) {
-        validator.validateGetRoleNameOfSpecificUser(userId, groupId);
-        log.info("Get role name for {}", userId);
-        return userRoleRepository.findByUserIdAndGroupId(userId, groupId).getRoleName();
+        String result = "";
+
+        if(userRoleRepository.existsByUserIdAndGroupId(userId, groupId)) {
+            log.info("Get role name for {}", userId);
+            result = userRoleRepository.findByUserIdAndGroupId(userId, groupId).getRoleName();
+        }
+
+        return result;
     }
 
     /**
