@@ -97,6 +97,12 @@ public class Validator {
         validateUserId(userId);
     }
 
+    public void validateMultipleIdsExist(List<String> groupIds) {
+        for (String groupId : groupIds){
+            validateGroupIdExists(groupId);
+        }
+    }
+
     private void validateUserId(UUID userId) {
         log.info("Sending validating request to user service");
         ResponseEntity<UserIdExistsResponse> response = userClient.checkUserIdExists(userId);

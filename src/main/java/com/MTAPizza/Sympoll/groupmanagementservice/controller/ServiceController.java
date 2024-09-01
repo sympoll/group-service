@@ -201,4 +201,16 @@ ServiceController {
         log.info("Received request to get all group ids of use {}", userId);
         return memberService.getAllUserGroups(userId);
     }
+
+    /**
+     * Fetch and retrieve a list of group names by their ids.
+     * @param groupIds Given group ids.
+     * @return A list of DTO with the user id and the username.
+     */
+    @GetMapping("/group-name-list")
+    @ResponseStatus(HttpStatus.OK)
+    public List<GroupNameResponse> getGroupNamesByIds(@RequestParam List<String> groupIds){
+        log.info("Received request to retrieve usernames");
+        return groupService.getGroupNamesByIds(groupIds);
+    }
 }
