@@ -40,14 +40,14 @@ ServiceController {
     /**
      * Add a user as a new member to a group.
      * @param groupId ID of the group to add the user to.
-     * @param userId ID of the user to add to the group.
+     * @param username The user's username to add to the group.
      * @return Information of the member that was created and added to the group.
      */
     @PostMapping("/add-member")
     @ResponseStatus(HttpStatus.OK)
-    public MemberResponse addMember(@RequestParam String groupId, @RequestParam UUID userId) {
-        log.info("Received request to add the member {} to the group, {}", userId, groupId);
-        return groupService.addMember(groupId, userId);
+    public MemberResponse addMember(@RequestParam String groupId, @RequestParam String username) {
+        log.info("Received request to add the member {} to the group, {}", username, groupId);
+        return groupService.addMember(groupId, username);
     }
 
     /**
