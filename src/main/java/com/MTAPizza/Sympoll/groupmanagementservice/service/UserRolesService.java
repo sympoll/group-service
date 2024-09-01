@@ -55,7 +55,6 @@ public class UserRolesService {
     public String getRoleNameOfSpecificUser(UUID userId, String groupId) {
         String result = "";
 
-        log.info("roles {}", userRoleRepository.findByGroupId(groupId));
         if(userRoleRepository.existsByUserIdAndGroupId(userId, groupId)) {
             log.info("Get role name for {}", userId);
             result = userRoleRepository.findByUserIdAndGroupId(userId, groupId).getRoleName();
