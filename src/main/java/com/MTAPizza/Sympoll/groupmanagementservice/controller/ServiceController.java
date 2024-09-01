@@ -207,9 +207,9 @@ ServiceController {
      * @param groupIds Given group ids.
      * @return A list of DTO with the user id and the username.
      */
-    @GetMapping("/group-name-list")
+    @PostMapping("/group-name-list")
     @ResponseStatus(HttpStatus.OK)
-    public List<GroupNameResponse> getGroupNamesByIds(@RequestParam List<String> groupIds){
+    public List<GroupNameResponse> getGroupNamesByIds(@RequestBody List<String> groupIds){
         log.info("Received request to retrieve usernames");
         return groupService.getGroupNamesByIds(groupIds);
     }
