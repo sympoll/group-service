@@ -93,6 +93,10 @@ public class Validator {
         validateUserId(userId);
     }
 
+    public void validateGetAllUserGroups(UUID userId){
+        validateUserId(userId);
+    }
+
     private void validateUserId(UUID userId) {
         log.info("Sending validating request to user service");
         ResponseEntity<UserIdExistsResponse> response = userClient.checkUserIdExists(userId);
