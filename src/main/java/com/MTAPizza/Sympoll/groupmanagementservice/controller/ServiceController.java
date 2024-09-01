@@ -42,14 +42,14 @@ ServiceController {
     /**
      * Add a user as a new member to a group.
      * @param groupId ID of the group to add the user to.
-     * @param userId ID of the user to add to the group.
+     * @param username The user's username to add to the group.
      * @return Information of the member that was created and added to the group.
      */
     @PostMapping("/add-member")
     @ResponseStatus(HttpStatus.OK)
-    public MemberResponse addMember(@RequestParam String groupId, @RequestParam UUID userId) {
-        log.info("Received request to add the member {} to the group, {}", userId, groupId);
-        return groupService.addMember(groupId, userId);
+    public MemberDetailsResponse addMember(@RequestParam String groupId, @RequestParam String username) {
+        log.info("Received request to add the member {} to the group, {}", username, groupId);
+        return groupService.addMember(groupId, username);
     }
 
     /**
@@ -184,13 +184,25 @@ ServiceController {
     }
 
     /**
+     * Fetch and return the group name by ID.
+     * @param groupId The given group ID.
+     * @return Information of the group.
+     */
+    @GetMapping("/name/by-group-id")
+    @ResponseStatus(HttpStatus.OK)
+    public GroupNameResponse getGroupNameById(@RequestParam String groupId) {
+        log.info("Received a request to get group name by id {}", groupId);
+        return groupService.getGroupNameById(groupId);
+    }
+
+    /**
      * Fetch and return the group details by ID.
      * @param groupId The given group ID.
      * @return Information of the group.
      */
     @GetMapping("/by-group-id")
     @ResponseStatus(HttpStatus.OK)
-    public GroupNameResponse getGroupById(@RequestParam String groupId) {
+    public GroupResponse getGroupById(@RequestParam String groupId) {
         log.info("Received a request to get group by id {}", groupId);
         return groupService.getGroupById(groupId);
     }

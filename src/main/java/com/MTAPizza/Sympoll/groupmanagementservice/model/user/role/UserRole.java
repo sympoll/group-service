@@ -25,7 +25,6 @@ public class UserRole {
     @Column(name = "group_id")
     private String groupId;
 
-    @Id
     @Column(name = "role_name")
     private String roleName;
 }

@@ -51,7 +51,7 @@ public class GroupService {
 
         // Create Member object for the group creator
         Member creator = new Member(createdGroup.getGroupId(), createdGroup.getCreatorId());
-        memberService.createNewMember(creator);
+        memberService.createNewFirstMember(creator);
         createdGroup.addMember(creator);
         log.info("User with ID - '{}' added to the new group as a member", creator.getUserId());
 
@@ -69,19 +69,33 @@ public class GroupService {
     /**
      * Add a new member to a group in the database.
      * @param groupId ID of the group to add the member to.
-     * @param userId ID of the user to add as a member.
+     * @param username The user's username to add to the group.
      * @return  Information on the member that created and added to the group.
      */
     @Transactional
-    public MemberResponse addMember(String groupId, UUID userId) {
+    public MemberDetailsResponse addMember(String groupId, String username) {
+        UUID userId = getUserId(username);
         validator.validateAddMember(groupId, userId);
         Member newMember = new Member(groupId, userId);
-
         Group group = groupRepository.getReferenceById(groupId);
 
         group.addMember(newMember);
         groupRepository.save(group); // Save changes to the database
-        return memberService.createNewMember(newMember);
+        return memberService.createNewMember(newMember, username);
+    }
+
+    private UUID getUserId(String username) {
+        log.info("Sending request to get '{}' id from the user service", username);
+        ResponseEntity<UserIdResponse> response = userClient.getUserIdByUsername(username);
+
+        if(response.getStatusCode().is2xxSuccessful()){
+            return Objects.requireNonNull(response.getBody()).userId();
+        } else {
+            String errorMessage = response.hasBody() ? response.getBody().toString() : "No error message in the response body";
+            log.error("Request to user service failed. Status code {}", response.getStatusCode());
+            throw new RequestFailedException("Request to user service failed. Status code " + response.getStatusCode() + "error message " + errorMessage);
+
+        }
     }
 
     /**
@@ -95,11 +109,33 @@ public class GroupService {
         validator.validateRemoveMember(groupId, userId);
         Group group = groupRepository.getReferenceById(groupId);
         Member memberToRemove = group.getMember(userId);
+        String userRoleName = userRolesService.getRoleNameOfSpecificUser(userId, groupId);
+
+        if (group.getMembersList().size() == 1) {
+            deleteGroup(groupId);
+            return memberToRemove.toMemberResponse();
+        }
+        // Make sure the group remain with an admin.
+        if (userRoleName.equals(RoleName.ADMIN.toString()) && userRolesService.isOnlyOneAdmin(groupId)) {
+            setRandomlyNewAdmin(group.getMembersList(), groupId, userId);
+        }
 
         group.removeMember(userId);
-        groupRepository.save(group); // Save changes to the database
+        groupRepository.save(group);
 
         return memberToRemove.toMemberResponse();
+    }
+
+    private void setRandomlyNewAdmin(List<Member> groupMembers, String groupId, UUID removedUserId) {
+        Random random = new Random();
+        List<Member> membersWithoutTheAdmin = groupMembers.stream().filter(member -> !member.getUserId().equals(removedUserId)).toList();
+        Member randomMember = membersWithoutTheAdmin.get(random.nextInt(membersWithoutTheAdmin.size()));
+
+        if(userRolesService.isMemberHasRole(randomMember.getUserId(),groupId)) {
+            userRolesService.changeUserRole(randomMember.getUserId(),groupId,RoleName.ADMIN.toString());
+        } else {
+            userRolesService.createUserRole(randomMember.getUserId(),groupId,RoleName.ADMIN.toString());
+        }
     }
 
     /**
@@ -151,13 +187,15 @@ public class GroupService {
             // Fetch roles for all users
             Map<UUID, String> userRolesMap = userRolesService.getRolesForUsers(userIds, groupId);
 
+            assert members != null;
             for (MembersUsernameResponse member : members) {
                 String roleName = userRolesMap.getOrDefault(member.userId(), "Member");
                 result.add(new MemberDetailsResponse(member.userId(), member.username(), roleName));
             }
         } else {
+            String errorMessage = response.hasBody() ? response.getBody().toString() : "No error message in the response body";
             log.error("Request to user service failed. Status code {}", response.getStatusCode());
-            throw new RequestFailedException("Request to user service failed. Status code " + response.getStatusCode());
+            throw new RequestFailedException("Request to user service failed. Status code " + response.getStatusCode() + "error message " + errorMessage);
         }
 
         return result;
@@ -189,14 +227,24 @@ public class GroupService {
     }
 
     /**
-     * Fetch and return the group details by ID.
+     * Fetch and return the group name by ID.
      * @param groupId The given group ID.
      * @return Information of the group.
      */
-    public GroupNameResponse getGroupById(String groupId) {
+    public GroupNameResponse getGroupNameById(String groupId) {
         validator.validateGetGroupById(groupId);
-        log.info("Retrieving group with ID - '{}'", groupId);
+        log.info("Retrieving group name with ID - '{}'", groupId);
         return groupRepository.getReferenceById(groupId).toGroupNameResponse();
+    }
+
+    /**
+     * Fetch and return the group detail by ID.
+     * @param groupId The given group ID.
+     * @return Information of the group.
+     */
+    public GroupResponse getGroupById(String groupId) {
+        log.info("Retrieving group with ID - '{}'", groupId);
+        return groupRepository.getReferenceById(groupId).toGroupResponse();
     }
 
     public List<GroupNameResponse> getGroupNamesByIds(List<String> groupIds) {
