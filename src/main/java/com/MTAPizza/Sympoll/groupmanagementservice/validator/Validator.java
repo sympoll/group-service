@@ -33,7 +33,6 @@ public class Validator {
 
     public void validateAddMember(String groupId, UUID userId) {
         validateGroupIdExists(groupId);
-        validateUserId(userId);
         validateUserAlreadyMember(groupId, userId);
 
     }

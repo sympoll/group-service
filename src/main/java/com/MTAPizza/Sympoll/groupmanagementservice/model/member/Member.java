@@ -1,5 +1,6 @@
 package com.MTAPizza.Sympoll.groupmanagementservice.model.member;
 
+import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.MemberDetailsResponse;
 import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.MemberResponse;
 import com.MTAPizza.Sympoll.groupmanagementservice.model.member.id.MemberId;
 import jakarta.persistence.*;
@@ -27,5 +28,13 @@ public class Member {
     public MemberResponse toMemberResponse() {
         return new MemberResponse(
                 userId);
+    }
+
+    public MemberDetailsResponse toMemberDetailsResponse(String username) {
+        return new MemberDetailsResponse(
+                userId,
+                username,
+                "Member"
+        );
     }
 }
