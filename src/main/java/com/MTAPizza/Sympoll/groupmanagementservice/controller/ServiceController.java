@@ -45,7 +45,7 @@ ServiceController {
      */
     @PostMapping("/add-member")
     @ResponseStatus(HttpStatus.OK)
-    public MemberResponse addMember(@RequestParam String groupId, @RequestParam String username) {
+    public MemberDetailsResponse addMember(@RequestParam String groupId, @RequestParam String username) {
         log.info("Received request to add the member {} to the group, {}", username, groupId);
         return groupService.addMember(groupId, username);
     }

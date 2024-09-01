@@ -51,7 +51,7 @@ public class GroupService {
 
         // Create Member object for the group creator
         Member creator = new Member(createdGroup.getGroupId(), createdGroup.getCreatorId());
-        memberService.createNewMember(creator);
+        memberService.createNewFirstMember(creator);
         createdGroup.addMember(creator);
         log.info("User with ID - '{}' added to the new group as a member", creator.getUserId());
 
@@ -73,7 +73,7 @@ public class GroupService {
      * @return  Information on the member that created and added to the group.
      */
     @Transactional
-    public MemberResponse addMember(String groupId, String username) {
+    public MemberDetailsResponse addMember(String groupId, String username) {
         UUID userId = getUserId(username);
         validator.validateAddMember(groupId, userId);
         Member newMember = new Member(groupId, userId);
@@ -81,7 +81,7 @@ public class GroupService {
 
         group.addMember(newMember);
         groupRepository.save(group); // Save changes to the database
-        return memberService.createNewMember(newMember);
+        return memberService.createNewMember(newMember, username);
     }
 
     private UUID getUserId(String username) {
