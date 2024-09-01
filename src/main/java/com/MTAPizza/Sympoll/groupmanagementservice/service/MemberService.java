@@ -3,6 +3,7 @@ package com.MTAPizza.Sympoll.groupmanagementservice.service;
 import com.MTAPizza.Sympoll.groupmanagementservice.client.UserClient;
 import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.MemberDetailsResponse;
 import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.MemberResponse;
+import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.UserGroupsResponse;
 import com.MTAPizza.Sympoll.groupmanagementservice.model.member.Member;
 import com.MTAPizza.Sympoll.groupmanagementservice.repository.MemberRepository;
 import com.MTAPizza.Sympoll.groupmanagementservice.validator.Validator;
