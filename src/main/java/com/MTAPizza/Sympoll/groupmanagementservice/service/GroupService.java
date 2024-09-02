@@ -246,4 +246,15 @@ public class GroupService {
         log.info("Retrieving group with ID - '{}'", groupId);
         return groupRepository.getReferenceById(groupId).toGroupResponse();
     }
+
+    public List<GroupNameResponse> getGroupNamesByIds(List<String> groupIds) {
+        validator.validateMultipleIdsExist(groupIds);
+        log.info("Retrieving groups names from db");
+
+        return groupRepository
+                .findByGroupIdIn(groupIds)
+                .stream()
+                .map(Group::toGroupNameResponse)
+                .toList();
+    }
 }
