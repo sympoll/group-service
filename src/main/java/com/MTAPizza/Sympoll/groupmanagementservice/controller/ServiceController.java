@@ -86,7 +86,7 @@ ServiceController {
 
     @GetMapping("/members")
     @ResponseStatus(HttpStatus.OK)
-    public List<MemberDetailsResponse> getAllMembers(String groupId) {
+    public List<MemberDetailsResponse> getAllMembers(@RequestParam String groupId) {
         log.info("Received request to get all members of group {}", groupId);
         return groupService.getAllMembers(groupId);
     }
