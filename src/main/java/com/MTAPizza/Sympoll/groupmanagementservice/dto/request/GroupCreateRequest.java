@@ -5,5 +5,5 @@ import java.util.UUID;
 public record GroupCreateRequest(
         String groupName,
         String description,
-        UUID creatorId
+        UUID userId
 ) {}
