@@ -14,7 +14,7 @@ import java.util.UUID;
 
 public interface UserClient {
     @GetExchange("/api/user/by-user-id")
-    ResponseEntity<UserDataResponse> getUserDataById(@RequestParam UUID id);
+    ResponseEntity<UserDataResponse> getUserDataById(@RequestParam UUID userId);
 
     @PostExchange("/api/user/list-by-user-ids")
     ResponseEntity<List<UserDataResponse>> getGroupMembersDetails(@RequestBody List<UUID> userIds);

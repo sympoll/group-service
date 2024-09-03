@@ -120,7 +120,7 @@ public class GroupService {
      * @return Data of the user fetched.
      */
     private UserDataResponse getUserDataById(UUID id) {
-        log.info("Sending request to get user data of user with ID: '{}' from the user service", id);
+        log.info("Sending request to get user data of user with ID: '{}' from the user service", id); // TODO: THIS FAILS!!!!
         ResponseEntity<UserDataResponse> response = userClient.getUserDataById(id);
 
         if(response.getStatusCode().is2xxSuccessful()){
