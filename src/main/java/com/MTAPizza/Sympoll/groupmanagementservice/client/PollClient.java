@@ -7,6 +7,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.service.annotation.DeleteExchange;
 
 public interface PollClient {
-    @DeleteExchange("/api/group/by-group-id")
+    @DeleteExchange("/api/poll/by-group-id")
     ResponseEntity<DeleteGroupPollsResponse> deleteGroupPolls(@RequestBody DeleteGroupPollsRequest deleteGroupPollsRequest);
 }
