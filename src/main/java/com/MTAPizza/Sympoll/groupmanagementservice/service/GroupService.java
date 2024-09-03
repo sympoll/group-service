@@ -9,8 +9,6 @@ import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.group.service.Gr
 import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.group.service.MemberDetailsResponse;
 import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.group.service.MemberResponse;
 import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.poll.service.DeleteGroupPollsResponse;
-import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.user.service.MembersUserDataResponse;
-import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.user.service.UserIdResponse;
 import com.MTAPizza.Sympoll.groupmanagementservice.exception.request.RequestFailedException;
 import com.MTAPizza.Sympoll.groupmanagementservice.model.Group;
 import com.MTAPizza.Sympoll.groupmanagementservice.model.member.Member;
