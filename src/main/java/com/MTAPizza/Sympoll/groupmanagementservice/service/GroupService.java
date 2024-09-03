@@ -1,6 +1,8 @@
 package com.MTAPizza.Sympoll.groupmanagementservice.service;
 
+import com.MTAPizza.Sympoll.groupmanagementservice.client.PollClient;
 import com.MTAPizza.Sympoll.groupmanagementservice.client.UserClient;
+import com.MTAPizza.Sympoll.groupmanagementservice.dto.request.DeleteGroupPollsRequest;
 import com.MTAPizza.Sympoll.groupmanagementservice.dto.request.GroupCreateRequest;
 import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.*;
 import com.MTAPizza.Sympoll.groupmanagementservice.exception.request.RequestFailedException;
@@ -25,6 +27,7 @@ public class GroupService {
     private final MemberService memberService;
     private final UserRolesService userRolesService;
     private final UserClient userClient;
+    private final PollClient pollClient;
     private final Validator validator;
 
     /**
@@ -208,7 +211,17 @@ public class GroupService {
      */
     public String deleteGroup(String groupId) {
         validator.validateDeleteGroup(groupId);
+
         log.info("Deleting group with ID - '{}'", groupId);
+        log.info("Sending request to delete group polls");
+        ResponseEntity<DeleteGroupPollsResponse> response = pollClient.deleteGroupPolls(new DeleteGroupPollsRequest(groupId));
+
+        if (!response.getStatusCode().is2xxSuccessful()) {
+            log.error("Request to delete group polls failed. Status code {}", response.getStatusCode());
+            throw new RequestFailedException("Request to delete group polls failed. Status code " + response.getStatusCode());
+        }
+
+        //TODO: send request to the media service and send the requests simultaneously.
 
         groupRepository.deleteById(groupId);
         log.info("Deleted group with ID - '{}'", groupId);

@@ -1,5 +1,6 @@
 package com.MTAPizza.Sympoll.groupmanagementservice.config;
 
+import com.MTAPizza.Sympoll.groupmanagementservice.client.PollClient;
 import com.MTAPizza.Sympoll.groupmanagementservice.client.UserClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -13,6 +14,9 @@ public class RestClientConfig {
     @Value("${user.service.url}")
     private String userServiceUrl;
 
+    @Value("${poll.service.url}")
+    private String pollServiceUrl;
+
     @Bean
     public UserClient userClient() {
         RestClient restClient = RestClient.builder()
@@ -22,5 +26,16 @@ public class RestClientConfig {
         var restClientAdapter = RestClientAdapter.create(restClient);
         var httpServiceProxyFactory = HttpServiceProxyFactory.builderFor(restClientAdapter).build();
         return httpServiceProxyFactory.createClient(UserClient.class);
+    }
+
+    @Bean
+    public PollClient pollClient() {
+        RestClient restClient = RestClient.builder()
+                .baseUrl(pollServiceUrl)
+                .build();
+
+        var restClientAdapter = RestClientAdapter.create(restClient);
+        var httpServiceProxyFactory = HttpServiceProxyFactory.builderFor(restClientAdapter).build();
+        return httpServiceProxyFactory.createClient(PollClient.class);
     }
 }
