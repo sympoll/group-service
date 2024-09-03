@@ -1,8 +1,10 @@
 package com.MTAPizza.Sympoll.groupmanagementservice.model.member;
 
-import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.MemberDetailsResponse;
-import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.MemberResponse;
+import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.group.service.MemberDetailsResponse;
+import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.group.service.MemberResponse;
 import com.MTAPizza.Sympoll.groupmanagementservice.model.member.id.MemberId;
+import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.user.service.UserDataResponse;
+import com.MTAPizza.Sympoll.groupmanagementservice.model.user.role.UserRole;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -30,11 +32,10 @@ public class Member {
                 userId);
     }
 
-    public MemberDetailsResponse toMemberDetailsResponse(String username) {
+    public MemberDetailsResponse toMemberDetailsResponse(UserDataResponse userDataResponse, String userRole) {
         return new MemberDetailsResponse(
-                userId,
-                username,
-                "Member"
+                userDataResponse,
+                userRole
         );
     }
 }

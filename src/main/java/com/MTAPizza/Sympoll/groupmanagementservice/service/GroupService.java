@@ -4,11 +4,18 @@ import com.MTAPizza.Sympoll.groupmanagementservice.client.PollClient;
 import com.MTAPizza.Sympoll.groupmanagementservice.client.UserClient;
 import com.MTAPizza.Sympoll.groupmanagementservice.dto.request.DeleteGroupPollsRequest;
 import com.MTAPizza.Sympoll.groupmanagementservice.dto.request.GroupCreateRequest;
-import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.*;
+import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.group.service.GroupNameResponse;
+import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.group.service.GroupResponse;
+import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.group.service.MemberDetailsResponse;
+import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.group.service.MemberResponse;
+import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.poll.service.DeleteGroupPollsResponse;
+import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.user.service.MembersUserDataResponse;
+import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.user.service.UserIdResponse;
 import com.MTAPizza.Sympoll.groupmanagementservice.exception.request.RequestFailedException;
 import com.MTAPizza.Sympoll.groupmanagementservice.model.Group;
 import com.MTAPizza.Sympoll.groupmanagementservice.model.member.Member;
 import com.MTAPizza.Sympoll.groupmanagementservice.model.role.RoleName;
+import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.user.service.UserDataResponse;
 import com.MTAPizza.Sympoll.groupmanagementservice.repository.GroupRepository;
 import com.MTAPizza.Sympoll.groupmanagementservice.validator.Validator;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +45,7 @@ public class GroupService {
     @Transactional
     public GroupResponse createGroup(GroupCreateRequest groupCreateRequest) {
         validator.validateCreateNewGroup(groupCreateRequest);
+        UserDataResponse userDataResponse = getUserDataById(groupCreateRequest.creatorId());
 
         log.info("Creating group {}", groupCreateRequest);
         String fixedSpacesGroupName = groupCreateRequest.groupName().toLowerCase().replace(" ", "-");
@@ -54,7 +62,7 @@ public class GroupService {
 
         // Create Member object for the group creator
         Member creator = new Member(createdGroup.getGroupId(), createdGroup.getCreatorId());
-        memberService.createNewFirstMember(creator);
+        memberService.createNewMember(creator, userDataResponse, "admin");
         createdGroup.addMember(creator);
         log.info("User with ID - '{}' added to the new group as a member", creator.getUserId());
 
@@ -77,27 +85,52 @@ public class GroupService {
      */
     @Transactional
     public MemberDetailsResponse addMember(String groupId, String username) {
-        UUID userId = getUserId(username);
-        validator.validateAddMember(groupId, userId);
-        Member newMember = new Member(groupId, userId);
+        UserDataResponse userDataResponse = getUserDataByUsername(username);
+        validator.validateAddMember(groupId, userDataResponse.userId());
+
+        Member newMember = new Member(groupId, userDataResponse.userId());
         Group group = groupRepository.getReferenceById(groupId);
 
         group.addMember(newMember);
-        groupRepository.save(group); // Save changes to the database
-        return memberService.createNewMember(newMember, username);
+        groupRepository.save(group);
+        return memberService.createNewMember(newMember, userDataResponse, "member");
     }
 
-    private UUID getUserId(String username) {
-        log.info("Sending request to get '{}' id from the user service", username);
-        ResponseEntity<UserIdResponse> response = userClient.getUserIdByUsername(username);
+
+    /**
+     * Fetch a user's data from User-Service, by his username.
+     * @param username Username of the user to fetch his data.
+     * @return Data of the user fetched.
+     */
+    private UserDataResponse getUserDataByUsername(String username) {
+        log.info("Sending request to get user data of user with Username: '{}' from the user service", username);
+        ResponseEntity<UserDataResponse> response = userClient.getUserDataByUsername(username);
 
         if(response.getStatusCode().is2xxSuccessful()){
-            return Objects.requireNonNull(response.getBody()).userId();
+            return response.getBody();
         } else {
-            String errorMessage = response.hasBody() ? response.getBody().toString() : "No error message in the response body";
+            String errorMessage = response.hasBody() ? String.valueOf(response.getBody()) : "No error message in the response body";
             log.error("Request to user service failed. Status code {}", response.getStatusCode());
             throw new RequestFailedException("Request to user service failed. Status code " + response.getStatusCode() + "error message " + errorMessage);
 
+        }
+    }
+
+    /**
+     * Fetch a user's data from User-Service, by his ID.
+     * @param id ID of the user to fetch his data.
+     * @return Data of the user fetched.
+     */
+    private UserDataResponse getUserDataById(UUID id) {
+        log.info("Sending request to get user data of user with ID: '{}' from the user service", id);
+        ResponseEntity<UserDataResponse> response = userClient.getUserDataById(id);
+
+        if(response.getStatusCode().is2xxSuccessful()){
+            return response.getBody();
+        } else {
+            String errorMessage = response.hasBody() ? String.valueOf(response.getBody()) : "No error message in the response body";
+            log.error("Request to user service failed. Status code {}", response.getStatusCode());
+            throw new RequestFailedException("Request to user service failed. Status code " + response.getStatusCode() + "error message " + errorMessage);
         }
     }
 
@@ -174,8 +207,10 @@ public class GroupService {
      */
     public List<MemberDetailsResponse> getAllMembers(String groupId) {
         validator.validateGetAllMembers(groupId);
+
         log.info("Retrieving all members of group {} from database...", groupId);
         List<MemberDetailsResponse> result = new ArrayList<>();
+
         List<UUID> userIds = groupRepository.findById(groupId)
                 .map(group -> group.getMembersList()
                         .stream()
@@ -183,20 +218,22 @@ public class GroupService {
                 .orElse(Collections.emptyList());
 
         log.info("Sending request to get member usernames from user service");
-        ResponseEntity<List<MembersUsernameResponse>> response = userClient.getGroupMembersDetails(userIds);
+        ResponseEntity<List<UserDataResponse>> response = userClient.getGroupMembersDetails(userIds);
 
         if (response.getStatusCode().is2xxSuccessful()) {
-            List<MembersUsernameResponse> members = response.getBody();
+            List<UserDataResponse> members = response.getBody();
             // Fetch roles for all users
             Map<UUID, String> userRolesMap = userRolesService.getRolesForUsers(userIds, groupId);
 
             assert members != null;
-            for (MembersUsernameResponse member : members) {
+            for (UserDataResponse member : members) {
                 String roleName = userRolesMap.getOrDefault(member.userId(), "Member");
-                result.add(new MemberDetailsResponse(member.userId(), member.username(), roleName));
+                result.add(
+                        new MemberDetailsResponse(member, roleName)
+                );
             }
         } else {
-            String errorMessage = response.hasBody() ? response.getBody().toString() : "No error message in the response body";
+            String errorMessage = response.hasBody() ? String.valueOf(response.getBody()) : "No error message in the response body";
             log.error("Request to user service failed. Status code {}", response.getStatusCode());
             throw new RequestFailedException("Request to user service failed. Status code " + response.getStatusCode() + "error message " + errorMessage);
         }

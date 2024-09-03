@@ -2,7 +2,7 @@ package com.MTAPizza.Sympoll.groupmanagementservice.validator;
 
 import com.MTAPizza.Sympoll.groupmanagementservice.client.UserClient;
 import com.MTAPizza.Sympoll.groupmanagementservice.dto.request.GroupCreateRequest;
-import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.UserIdExistsResponse;
+import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.user.service.UserIdExistsResponse;
 import com.MTAPizza.Sympoll.groupmanagementservice.exception.found.ResourceNotFoundException;
 import com.MTAPizza.Sympoll.groupmanagementservice.exception.member.UserAlreadyMemberException;
 import com.MTAPizza.Sympoll.groupmanagementservice.exception.member.UserNotMemberException;

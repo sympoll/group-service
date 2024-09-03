@@ -1,8 +1,8 @@
 package com.MTAPizza.Sympoll.groupmanagementservice.service;
 
 
-import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.UserRoleDeleteResponse;
-import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.UserRoleResponse;
+import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.group.service.UserRoleDeleteResponse;
+import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.group.service.UserRoleResponse;
 import com.MTAPizza.Sympoll.groupmanagementservice.model.role.RoleName;
 import com.MTAPizza.Sympoll.groupmanagementservice.model.user.role.UserRole;
 import com.MTAPizza.Sympoll.groupmanagementservice.repository.UserRoleRepository;
