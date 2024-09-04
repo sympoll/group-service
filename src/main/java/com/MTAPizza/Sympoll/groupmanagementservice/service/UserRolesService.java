@@ -124,7 +124,7 @@ public class UserRolesService {
         UserRole userRole = userRoleRepository.findByUserIdAndGroupId(userId, groupId);
         boolean result = false;
 
-        if(userRole.getRoleName().equals(RoleName.MODERATOR.toString()) || userRole.getRoleName().equals(RoleName.ADMIN.toString())){
+        if(userRole.getRoleName().equals(RoleName.ROLE_MODERATOR.toString()) || userRole.getRoleName().equals(RoleName.ROLE_ADMIN.toString())){
             result = true;
         }else {
             //TODO: handle costume role permissions verification.
@@ -138,7 +138,7 @@ public class UserRolesService {
         List<UserRole> groupRoles = userRoleRepository.findByGroupId(groupId);
 
         long adminsCount = groupRoles.stream()
-                .filter(userRole -> userRole.getRoleName().equals(RoleName.ADMIN.toString()))
+                .filter(userRole -> userRole.getRoleName().equals(RoleName.ROLE_ADMIN.toString()))
                 .count();
 
         return adminsCount == 1;

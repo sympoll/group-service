@@ -60,12 +60,12 @@ public class GroupService {
 
         // Create Member object for the group creator
         Member creator = new Member(createdGroup.getGroupId(), createdGroup.getCreatorId());
-        memberService.createNewMember(creator, userDataResponse, "admin");
+        memberService.createNewMember(creator, userDataResponse, RoleName.ROLE_ADMIN.toString());
         createdGroup.addMember(creator);
         log.info("User with ID - '{}' added to the new group as a member", creator.getUserId());
 
         // Set the creator to be group admin
-        userRolesService.createUserRole(createdGroup.getCreatorId(), createdGroup.getGroupId(), RoleName.ADMIN.toString());
+        userRolesService.createUserRole(createdGroup.getCreatorId(), createdGroup.getGroupId(), RoleName.ROLE_ADMIN.toString());
         log.info("User with ID - '{}' set as admin in the new group", creator.getUserId());
 
         groupRepository.save(createdGroup);
@@ -91,7 +91,7 @@ public class GroupService {
 
         group.addMember(newMember);
         groupRepository.save(group);
-        return memberService.createNewMember(newMember, userDataResponse, "member");
+        return memberService.createNewMember(newMember, userDataResponse, RoleName.ROLE_MEMBER.toString());
     }
 
 
@@ -150,7 +150,7 @@ public class GroupService {
             return memberToRemove.toMemberResponse();
         }
         // Make sure the group remain with an admin.
-        if (userRoleName.equals(RoleName.ADMIN.toString()) && userRolesService.isOnlyOneAdmin(groupId)) {
+        if (userRoleName.equals(RoleName.ROLE_ADMIN.toString()) && userRolesService.isOnlyOneAdmin(groupId)) {
             setRandomlyNewAdmin(group.getMembersList(), groupId, userId);
         }
 
@@ -166,9 +166,9 @@ public class GroupService {
         Member randomMember = membersWithoutTheAdmin.get(random.nextInt(membersWithoutTheAdmin.size()));
 
         if(userRolesService.isMemberHasRole(randomMember.getUserId(),groupId)) {
-            userRolesService.changeUserRole(randomMember.getUserId(),groupId,RoleName.ADMIN.toString());
+            userRolesService.changeUserRole(randomMember.getUserId(),groupId,RoleName.ROLE_ADMIN.toString());
         } else {
-            userRolesService.createUserRole(randomMember.getUserId(),groupId,RoleName.ADMIN.toString());
+            userRolesService.createUserRole(randomMember.getUserId(),groupId,RoleName.ROLE_ADMIN.toString());
         }
     }
 
@@ -225,7 +225,7 @@ public class GroupService {
 
             assert members != null;
             for (UserDataResponse member : members) {
-                String roleName = userRolesMap.getOrDefault(member.userId(), "Member");
+                String roleName = userRolesMap.getOrDefault(member.userId(), RoleName.ROLE_MEMBER.toString());
                 result.add(
                         new MemberDetailsResponse(member, roleName)
                 );
