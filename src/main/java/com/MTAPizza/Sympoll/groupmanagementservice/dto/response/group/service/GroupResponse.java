@@ -1,4 +1,6 @@
-package com.MTAPizza.Sympoll.groupmanagementservice.dto.response;
+package com.MTAPizza.Sympoll.groupmanagementservice.dto.response.group.service;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -9,6 +11,7 @@ public record GroupResponse (
     String groupName,
     String description,
     UUID creatorId,
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
     LocalDateTime timeCreated,
     List<MemberResponse> membersList
 ) {}

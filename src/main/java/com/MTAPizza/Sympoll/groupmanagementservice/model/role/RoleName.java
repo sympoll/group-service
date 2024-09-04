@@ -3,13 +3,17 @@ package com.MTAPizza.Sympoll.groupmanagementservice.model.role;
 import com.MTAPizza.Sympoll.groupmanagementservice.model.user.role.UserRole;
 
 public enum RoleName {
-    ADMIN,
-    MODERATOR;
+    ROLE_ADMIN,
+    ROLE_MODERATOR,
+    ROLE_MEMBER;
 
     @Override
     public String toString() {
-        String name = this.name().toLowerCase();
-        return name.substring(0, 1).toUpperCase() + name.substring(1);
+        return switch (this) {
+            case ROLE_ADMIN -> "Admin";
+            case ROLE_MODERATOR -> "Moderator";
+            case ROLE_MEMBER -> "Member";
+        };
     }
 }
 

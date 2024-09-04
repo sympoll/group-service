@@ -4,7 +4,8 @@ import com.MTAPizza.Sympoll.groupmanagementservice.dto.request.GroupCreateReques
 import com.MTAPizza.Sympoll.groupmanagementservice.dto.request.UserRoleChangeRequest;
 import com.MTAPizza.Sympoll.groupmanagementservice.dto.request.UserRoleCreateRequest;
 import com.MTAPizza.Sympoll.groupmanagementservice.dto.request.UserRoleDeleteRequest;
-import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.*;
+import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.group.service.DeleteGroupResponse;
+import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.group.service.*;
 import com.MTAPizza.Sympoll.groupmanagementservice.service.GroupService;
 import com.MTAPizza.Sympoll.groupmanagementservice.service.MemberService;
 import com.MTAPizza.Sympoll.groupmanagementservice.service.UserRolesService;
@@ -85,7 +86,7 @@ ServiceController {
 
     @GetMapping("/members")
     @ResponseStatus(HttpStatus.OK)
-    public List<MemberDetailsResponse> getAllMembers(String groupId) {
+    public List<MemberDetailsResponse> getAllMembers(@RequestParam String groupId) {
         log.info("Received request to get all members of group {}", groupId);
         return groupService.getAllMembers(groupId);
     }

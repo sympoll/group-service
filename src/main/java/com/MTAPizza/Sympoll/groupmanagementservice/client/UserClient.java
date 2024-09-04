@@ -1,8 +1,8 @@
 package com.MTAPizza.Sympoll.groupmanagementservice.client;
 
-import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.MembersUsernameResponse;
-import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.UserIdExistsResponse;
-import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.UserIdResponse;
+import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.user.service.UserIdExistsResponse;
+import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.user.service.UserIdResponse;
+import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.user.service.UserDataResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -13,12 +13,15 @@ import java.util.List;
 import java.util.UUID;
 
 public interface UserClient {
-    @PostExchange("/api/user/username-list")
-    ResponseEntity<List<MembersUsernameResponse>> getGroupMembersDetails(@RequestBody List<UUID> userIds);
+    @GetExchange("/api/user/by-user-id")
+    ResponseEntity<UserDataResponse> getUserDataById(@RequestParam UUID userId);
+
+    @PostExchange("/api/user/list-by-user-ids")
+    ResponseEntity<List<UserDataResponse>> getGroupMembersDetails(@RequestBody List<UUID> userIds);
 
     @GetExchange("/api/user/id")
     ResponseEntity<UserIdExistsResponse> checkUserIdExists(@RequestParam UUID userId);
 
     @GetExchange("/api/user/by-username")
-    ResponseEntity<UserIdResponse> getUserIdByUsername(@RequestParam String username);
+    ResponseEntity<UserDataResponse> getUserDataByUsername(@RequestParam String username);
 }

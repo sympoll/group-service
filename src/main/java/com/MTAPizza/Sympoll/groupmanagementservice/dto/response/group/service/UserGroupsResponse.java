@@ -1,4 +1,4 @@
-package com.MTAPizza.Sympoll.groupmanagementservice.dto.response;
+package com.MTAPizza.Sympoll.groupmanagementservice.dto.response.group.service;
 
 import java.util.List;
 

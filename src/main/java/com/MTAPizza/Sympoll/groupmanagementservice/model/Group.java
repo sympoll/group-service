@@ -1,7 +1,7 @@
 package com.MTAPizza.Sympoll.groupmanagementservice.model;
 
-import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.GroupNameResponse;
-import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.GroupResponse;
+import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.group.service.GroupNameResponse;
+import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.group.service.GroupResponse;
 import com.MTAPizza.Sympoll.groupmanagementservice.model.member.Member;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
