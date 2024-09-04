@@ -4,6 +4,8 @@ import com.MTAPizza.Sympoll.groupmanagementservice.dto.request.GroupCreateReques
 import com.MTAPizza.Sympoll.groupmanagementservice.dto.request.UserRoleChangeRequest;
 import com.MTAPizza.Sympoll.groupmanagementservice.dto.request.UserRoleCreateRequest;
 import com.MTAPizza.Sympoll.groupmanagementservice.dto.request.UserRoleDeleteRequest;
+import com.MTAPizza.Sympoll.groupmanagementservice.dto.request.media.GroupUpdateProfileBannerUrlRequest;
+import com.MTAPizza.Sympoll.groupmanagementservice.dto.request.media.GroupUpdateProfilePictureUrlRequest;
 import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.group.service.DeleteGroupResponse;
 import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.group.service.*;
 import com.MTAPizza.Sympoll.groupmanagementservice.service.GroupService;
@@ -225,5 +227,31 @@ ServiceController {
     public List<GroupNameResponse> getGroupNamesByIds(@RequestBody List<String> groupIds){
         log.info("Received request to retrieve usernames");
         return groupService.getGroupNamesByIds(groupIds);
+    }
+
+    /**
+     * Save a profile picture for a group
+     * @param groupUpdateProfilePictureUrlRequest Information on the update to perform.
+     * @return The updated group's ID.
+     */
+    @PostMapping("/profile-picture-url")
+    @ResponseStatus(HttpStatus.OK)
+    public String updateProfilePictureUrl(@RequestBody GroupUpdateProfilePictureUrlRequest groupUpdateProfilePictureUrlRequest){
+        log.info("Received request to save a profile picture url");
+        log.debug("Request received to add profile picture url: {}", groupUpdateProfilePictureUrlRequest);
+        return groupService.addProfilePictureUrl(groupUpdateProfilePictureUrlRequest);
+    }
+
+    /**
+     * Save a banner picture for a group
+     * @param groupUpdateProfileBannerUrlRequest Information on the update to perform.
+     * @return The updated group's ID.
+     */
+    @PostMapping("/profile-banner-url")
+    @ResponseStatus(HttpStatus.OK)
+    public String updateProfileBannerUrl(@RequestBody GroupUpdateProfileBannerUrlRequest groupUpdateProfileBannerUrlRequest){
+        log.info("Received request to save a banner picture url");
+        log.debug("Request received to add banner picture url: {}", groupUpdateProfileBannerUrlRequest);
+        return groupService.addProfileBannerUrl(groupUpdateProfileBannerUrlRequest);
     }
 }
