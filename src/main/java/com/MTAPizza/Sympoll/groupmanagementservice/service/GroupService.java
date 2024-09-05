@@ -4,11 +4,14 @@ import com.MTAPizza.Sympoll.groupmanagementservice.client.PollClient;
 import com.MTAPizza.Sympoll.groupmanagementservice.client.UserClient;
 import com.MTAPizza.Sympoll.groupmanagementservice.dto.request.DeleteGroupPollsRequest;
 import com.MTAPizza.Sympoll.groupmanagementservice.dto.request.GroupCreateRequest;
+import com.MTAPizza.Sympoll.groupmanagementservice.dto.request.media.GroupUpdateProfileBannerUrlRequest;
+import com.MTAPizza.Sympoll.groupmanagementservice.dto.request.media.GroupUpdateProfilePictureUrlRequest;
 import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.group.service.GroupNameResponse;
 import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.group.service.GroupResponse;
 import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.group.service.MemberDetailsResponse;
 import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.group.service.MemberResponse;
 import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.poll.service.DeleteGroupPollsResponse;
+import com.MTAPizza.Sympoll.groupmanagementservice.exception.group.GroupNotFoundException;
 import com.MTAPizza.Sympoll.groupmanagementservice.exception.request.RequestFailedException;
 import com.MTAPizza.Sympoll.groupmanagementservice.model.Group;
 import com.MTAPizza.Sympoll.groupmanagementservice.model.member.Member;
@@ -295,14 +298,50 @@ public class GroupService {
         return groupRepository.getReferenceById(groupId).toGroupResponse();
     }
 
-    public List<GroupNameResponse> getGroupNamesByIds(List<String> groupIds) {
+    public List<GroupResponse> getGroupsDataByIds(List<String> groupIds) {
         validator.validateMultipleIdsExist(groupIds);
-        log.info("Retrieving groups names from db");
+        log.info("Retrieving groups' data from DB");
 
         return groupRepository
                 .findByGroupIdIn(groupIds)
                 .stream()
-                .map(Group::toGroupNameResponse)
+                .map(Group::toGroupResponse)
                 .toList();
+    }
+
+    /**
+     * Add a profile picture to a group's profile.
+     * @param groupUpdateProfilePictureUrlRequest Information on the update requested.
+     * @return ID of the user that was updated.
+     */
+    public String addProfilePictureUrl(GroupUpdateProfilePictureUrlRequest groupUpdateProfilePictureUrlRequest) {
+        Group groupToUpdate = groupRepository
+                .findById(groupUpdateProfilePictureUrlRequest.groupId())
+                .orElseThrow(
+                        () -> new GroupNotFoundException(groupUpdateProfilePictureUrlRequest.groupId())
+                );
+
+        groupToUpdate.setProfilePictureUrl(groupUpdateProfilePictureUrlRequest.profilePictureUrl());
+        groupRepository.save(groupToUpdate);
+
+        return groupToUpdate.getGroupId();
+    }
+
+    /**
+     * Add a banner picture to a group's profile.
+     * @param groupUpdateProfileBannerUrlRequest Information on the update requested.
+     * @return ID of the user that was updated.
+     */
+    public String addProfileBannerUrl(GroupUpdateProfileBannerUrlRequest groupUpdateProfileBannerUrlRequest) {
+        Group groupToUpdate = groupRepository
+                .findById(groupUpdateProfileBannerUrlRequest.groupId())
+                .orElseThrow(
+                        () -> new GroupNotFoundException(groupUpdateProfileBannerUrlRequest.groupId())
+                );
+
+        groupToUpdate.setProfileBannerUrl(groupUpdateProfileBannerUrlRequest.profileBannerUrl());
+        groupRepository.save(groupToUpdate);
+
+        return groupToUpdate.getGroupId();
     }
 }

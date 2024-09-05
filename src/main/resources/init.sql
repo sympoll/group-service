@@ -4,6 +4,8 @@ CREATE TABLE groups
     group_id            VARCHAR(255) PRIMARY KEY,
     group_name          VARCHAR(255),
     description         TEXT,
+    profile_picture_url  VARCHAR(255),
+    profile_banner_url   VARCHAR(255),
     creator_id          UUID,
     time_created        TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

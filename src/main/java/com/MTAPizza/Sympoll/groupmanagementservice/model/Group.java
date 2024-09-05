@@ -30,6 +30,12 @@ public class Group {
     @Column(name = "description")
     private String description;
 
+    @Column(name = "profile_picture_url")
+    private String profilePictureUrl;
+
+    @Column(name = "profile_banner_url")
+    private String profileBannerUrl;
+
     @Column(name = "creator_id")
     private UUID creatorId;
 
@@ -75,12 +81,14 @@ public class Group {
 
     public GroupResponse toGroupResponse() {
         return new GroupResponse(
-                groupId,
-                groupName,
-                description,
-                creatorId,
-                timeCreated,
-                membersList != null ? membersList.stream().map(Member::toMemberResponse).toList() : new ArrayList<>() // Convert to member response
+                this.groupId,
+                this.groupName,
+                this.description,
+                this.profilePictureUrl,
+                this.profileBannerUrl,
+                this.creatorId,
+                this.timeCreated,
+                this. membersList != null ? this.membersList.stream().map(Member::toMemberResponse).toList() : new ArrayList<>() // Convert to member response
         );
     }
 

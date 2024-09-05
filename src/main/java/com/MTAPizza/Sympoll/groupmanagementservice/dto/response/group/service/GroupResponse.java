@@ -10,6 +10,8 @@ public record GroupResponse (
     String groupId,
     String groupName,
     String description,
+    String profilePictureUrl,
+    String profileBannerUrl,
     UUID creatorId,
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
     LocalDateTime timeCreated,
