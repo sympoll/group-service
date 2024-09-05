@@ -218,15 +218,15 @@ ServiceController {
     }
 
     /**
-     * Fetch and retrieve a list of group names by their ids.
-     * @param groupIds Given group ids.
-     * @return A list of DTO with the user id and the username.
+     * Fetch and retrieve a list of groups' data by their IDs.
+     * @param groupIds Given group IDs.
+     * @return List of group data DTOs.
      */
-    @PostMapping("/group-name-list")
+    @PostMapping("/groups-list")
     @ResponseStatus(HttpStatus.OK)
-    public List<GroupNameResponse> getGroupNamesByIds(@RequestBody List<String> groupIds){
-        log.info("Received request to retrieve usernames");
-        return groupService.getGroupNamesByIds(groupIds);
+    public List<GroupResponse> getGroupsDataByIds(@RequestBody List<String> groupIds){
+        log.info("Received request to retrieve groups' data by IDs");
+        return groupService.getGroupsDataByIds(groupIds);
     }
 
     /**

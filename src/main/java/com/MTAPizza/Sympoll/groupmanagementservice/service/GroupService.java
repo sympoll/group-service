@@ -298,14 +298,14 @@ public class GroupService {
         return groupRepository.getReferenceById(groupId).toGroupResponse();
     }
 
-    public List<GroupNameResponse> getGroupNamesByIds(List<String> groupIds) {
+    public List<GroupResponse> getGroupsDataByIds(List<String> groupIds) {
         validator.validateMultipleIdsExist(groupIds);
-        log.info("Retrieving groups names from db");
+        log.info("Retrieving groups' data from DB");
 
         return groupRepository
                 .findByGroupIdIn(groupIds)
                 .stream()
-                .map(Group::toGroupNameResponse)
+                .map(Group::toGroupResponse)
                 .toList();
     }
 
