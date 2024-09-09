@@ -1,4 +1,4 @@
-package com.MTAPizza.Sympoll.groupmanagementservice.dto.request;
+package com.MTAPizza.Sympoll.groupmanagementservice.dto.request.user.role;
 
 import java.util.UUID;
 

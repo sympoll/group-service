@@ -2,7 +2,8 @@ package com.MTAPizza.Sympoll.groupmanagementservice.service;
 
 import com.MTAPizza.Sympoll.groupmanagementservice.client.PollClient;
 import com.MTAPizza.Sympoll.groupmanagementservice.client.UserClient;
-import com.MTAPizza.Sympoll.groupmanagementservice.dto.request.DeleteGroupPollsRequest;
+import com.MTAPizza.Sympoll.groupmanagementservice.dto.request.decription.GroupUpdateDescriptionRequest;
+import com.MTAPizza.Sympoll.groupmanagementservice.dto.request.poll.DeleteGroupPollsRequest;
 import com.MTAPizza.Sympoll.groupmanagementservice.dto.request.GroupCreateRequest;
 import com.MTAPizza.Sympoll.groupmanagementservice.dto.request.media.GroupUpdateProfileBannerUrlRequest;
 import com.MTAPizza.Sympoll.groupmanagementservice.dto.request.media.GroupUpdateProfilePictureUrlRequest;
@@ -344,4 +345,21 @@ public class GroupService {
 
         return groupToUpdate.getGroupId();
     }
+
+    /**
+     * Add a profile description to a group's profile.
+     * @param groupUpdateDescriptionRequest Details on the group to update and the description to update.
+     * @return ID of the updated group.
+     */
+    public String updateProfileDescription(GroupUpdateDescriptionRequest groupUpdateDescriptionRequest) {
+        Group groupToUpdate = groupRepository
+                .findById(groupUpdateDescriptionRequest.groupId())
+                .orElseThrow(
+                        () -> new GroupNotFoundException(groupUpdateDescriptionRequest.groupId())
+                );
+
+        groupToUpdate.setDescription(groupUpdateDescriptionRequest.description());
+        groupRepository.save(groupToUpdate);
+
+        return groupToUpdate.getGroupId();    }
 }
