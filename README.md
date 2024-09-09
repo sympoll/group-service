@@ -37,7 +37,6 @@ The Group Service is a REST API controller designed to manage group operations w
        
        ```json
        {
-           "groupId": "1a2b3c",
            "groupName": "Developers",
            "description": "A group for all developers.",
            "creatorId": "d290f1ee-6c54-4b01-90e6-d701748f0851"
@@ -51,6 +50,8 @@ The Group Service is a REST API controller designed to manage group operations w
            "groupId": "1a2b3c",
            "groupName": "Developers",
            "description": "A group for all developers.",
+           "profilePictureUrl": null,
+           "profileBannerUrl": null,
            "creatorId": "d290f1ee-6c54-4b01-90e6-d701748f0851",
            "timeCreated": "2024-08-20T12:34:56",
            "membersList": []
@@ -70,16 +71,22 @@ The Group Service is a REST API controller designed to manage group operations w
    - **Description:** Adds a new member to an existing group.
    - **Query Parameters:**
      - `groupId` (String): The ID of the group to which the user will be added.
-     - `userId` (UUID): The ID of the user to add to the group.
+     - `username` (String): The username of the user to add to the group.
    - **Sample Request:**
-     - URL: `/api/group/add-member?groupId=1a2b3c&userId=d290f1ee-6c54-4b01-90e6-d701748f0851`
+     - URL: `/api/group/add-member?groupId=1a2b3c&username=user123`
    - **Response:**
      - `MemberResponse`: Contains information about the added member.
        
        ```json
        {
-           "userId": "d290f1ee-6c54-4b01-90e6-d701748f0851"
-       }
+       "userData": {
+           "userId": "ca98fcb8-28b3-4708-becd-9114c9bba4b3",
+           "username": "user123",
+           "email": "user123@gmail.com",
+           "profilePictureUrl": null
+       },
+       "roleName": "Member"
+      }
        ```
    - **Response Status:** `200 OK`
    - **Logs:**
@@ -126,6 +133,8 @@ The Group Service is a REST API controller designed to manage group operations w
                "groupId": "1a2b3c",
                "groupName": "Developers",
                "description": "A group for all developers.",
+               "profilePictureUrl": null,
+               "profileBannerUrl": null,
                "creatorId": "d290f1ee-6c54-4b01-90e6-d701748f0851",
                "timeCreated": "2024-08-20T12:34:56",
                "membersList": [
@@ -138,6 +147,8 @@ The Group Service is a REST API controller designed to manage group operations w
                "groupId": "4d5e6f",
                "groupName": "Designers",
                "description": "A group for all designers.",
+               "profilePictureUrl": null,
+               "profileBannerUrl": null,
                "creatorId": "a12b3c4d-5e6f-7g8h-9i10-jk11lm12no13",
                "timeCreated": "2024-08-19T11:23:45",
                "membersList": []
@@ -163,12 +174,24 @@ The Group Service is a REST API controller designed to manage group operations w
        
        ```json
        [
-           {
-               "userId": "d290f1ee-6c54-4b01-90e6-d701748f0851"
-           },
-           {
-               "userId": "e36g4h5i-7j8k-9l10-mn11-op12qr13st14"
-           }
+          {
+              "userData": {
+                  "userId": "9edc3d7f-b5cb-4e8b-9a9b-3b4b4d91bf0b",
+                  "username": "user345",
+                  "email": "user345@gmail.com",
+                  "profilePictureUrl": null
+              },
+              "roleName": "Member"
+          },
+          {
+              "userData": {
+                  "userId": "b1f8e925-2129-473d-bc09-b3a2a331f839",
+                  "username": "user123",
+                  "email": "user123@gmail.com",
+                  "profilePictureUrl": null
+              },
+              "roleName": "Admin"
+          }
        ]
        ```
    - **Response Status:** `200 OK`
