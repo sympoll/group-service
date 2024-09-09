@@ -1,9 +1,10 @@
 package com.MTAPizza.Sympoll.groupmanagementservice.controller;
 
 import com.MTAPizza.Sympoll.groupmanagementservice.dto.request.GroupCreateRequest;
-import com.MTAPizza.Sympoll.groupmanagementservice.dto.request.UserRoleChangeRequest;
-import com.MTAPizza.Sympoll.groupmanagementservice.dto.request.UserRoleCreateRequest;
-import com.MTAPizza.Sympoll.groupmanagementservice.dto.request.UserRoleDeleteRequest;
+import com.MTAPizza.Sympoll.groupmanagementservice.dto.request.decription.GroupUpdateDescriptionRequest;
+import com.MTAPizza.Sympoll.groupmanagementservice.dto.request.user.role.UserRoleChangeRequest;
+import com.MTAPizza.Sympoll.groupmanagementservice.dto.request.user.role.UserRoleCreateRequest;
+import com.MTAPizza.Sympoll.groupmanagementservice.dto.request.user.role.UserRoleDeleteRequest;
 import com.MTAPizza.Sympoll.groupmanagementservice.dto.request.media.GroupUpdateProfileBannerUrlRequest;
 import com.MTAPizza.Sympoll.groupmanagementservice.dto.request.media.GroupUpdateProfilePictureUrlRequest;
 import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.group.service.DeleteGroupResponse;
@@ -253,5 +254,19 @@ ServiceController {
         log.info("Received request to save a banner picture url");
         log.debug("Request received to add banner picture url: {}", groupUpdateProfileBannerUrlRequest);
         return groupService.addProfileBannerUrl(groupUpdateProfileBannerUrlRequest);
+    }
+
+
+    /**
+     * Save a group profile description.
+     * @param groupUpdateDescriptionRequest Information on the group and the description to save.
+     * @return the updated group's ID.
+     */
+    @PostMapping("/description")
+    @ResponseStatus(HttpStatus.OK)
+    public String updateProfileDescription(@RequestBody GroupUpdateDescriptionRequest groupUpdateDescriptionRequest){
+        log.info("Received request to save a description");
+        log.debug("Request received to add description: {}", groupUpdateDescriptionRequest);
+        return groupService.updateProfileDescription(groupUpdateDescriptionRequest);
     }
 }
