@@ -264,6 +264,243 @@ The Group Service is a REST API controller designed to manage group operations w
    - **Logs:**
      - `INFO`: Logs when a request to check user permission to delete a poll is received.
 
+---   
+
+### 10. **Get Groups by Member ID**
+
+   - **URL:** `/api/group/by-member-id`
+   - **Method:** `GET`
+   - **Description:** Retrieves all groups associated with a specific member ID.
+   - **Query Parameters:**
+     - `memberId` (UUID): The ID of the member whose groups will be retrieved.
+   - **Sample Request:** `/api/group/by-member-id?memberId=d290f1ee-6c54-4b01-90e6-d701748f0851`
+   - **Response:**
+     - `List<GroupResponse>`: A list of groups associated with the member.
+   - **Response Status:** `200 OK`
+   - **Logs:**
+     - `INFO`: Logs when a request to retrieve groups by member ID is received.
+
+---
+
+### 11. **Add User Role**
+
+   - **URL:** `/api/group/user-role`
+   - **Method:** `POST`
+   - **Description:** Adds a new role to a user in a specific group.
+   - **Request Body:**   
+     - `UserRoleCreateRequest`: Contains the user ID, group ID, and the role name.
+       
+       ```json
+       {
+           "userId": "d290f1ee-6c54-4b01-90e6-d701748f0851",
+           "groupId": "1a2b3c",
+           "roleName": "Admin"
+       }
+       ```
+   - **Response:**   
+     - `UserRoleResponse`: Contains the user ID and the new role.
+   - **Response Status:** `201 CREATED`
+   - **Logs:**
+     - `INFO`: Logs when a request to add a user role is received.
+
+---
+
+### 12. **Get User Role in a Group**
+
+   - **URL:** `/api/group/user-role`
+   - **Method:** `GET`
+   - **Description:** Retrieves the role of a specific user in a group.
+   - **Query Parameters:**
+     - `userId` (UUID): The ID of the user.
+     - `groupId` (String): The ID of the group.
+   - **Sample Request:** `/api/group/user-role?userId=d290f1ee-6c54-4b01-90e6-d701748f0851&groupId=1a2b3c`
+   - **Response:**   
+     - `String`: The role name of the user in the group.
+   - **Response Status:** `200 OK`
+   - **Logs:**
+     - `INFO`: Logs when a request to get a user's role is received.
+
+---
+
+### 13. **Change User Role in a Group**
+
+   - **URL:** `/api/group/user-role`
+   - **Method:** `PUT`
+   - **Description:** Changes the role of a user in a specific group.
+   - **Request Body:**   
+     - `UserRoleChangeRequest`: Contains the user ID, group ID, and the new role name.
+       
+       ```json
+       {
+           "userId": "d290f1ee-6c54-4b01-90e6-d701748f0851",
+           "groupId": "1a2b3c",
+           "newRoleName": "Moderator"
+       }
+       ```
+   - **Response:**   
+     - `String`: The previous role of the user in the group.
+   - **Response Status:** `200 OK`
+   - **Logs:**
+     - `INFO`: Logs when a request to change a user's role is received.
+
+---
+
+### 14. **Delete User Role**
+
+   - **URL:** `/api/group/user-role`
+   - **Method:** `DELETE`
+   - **Description:** Deletes a user's role from a group.
+   - **Request Body:**   
+     - `UserRoleDeleteRequest`: Contains the user ID, group ID, and the role name.
+       
+       ```json
+       {
+           "userId": "d290f1ee-6c54-4b01-90e6-d701748f0851",
+           "groupId": "1a2b3c",
+           "roleName": "Member"
+       }
+       ```
+   - **Response:**   
+     - `UserRoleDeleteResponse`: Contains the user ID and the deleted role name.
+   - **Response Status:** `200 OK`
+   - **Logs:**
+     - `INFO`: Logs when a request to delete a user role is received.
+
+---
+
+### 15. **Get Group Name by Group ID**
+
+   - **URL:** `/api/group/name/by-group-id`
+   - **Method:** `GET`
+   - **Description:** Retrieves the name of a group by its ID.
+   - **Query Parameters:**
+     - `groupId` (String): The ID of the group.
+   - **Sample Request:** `/api/group/name/by-group-id?groupId=1a2b3c`
+   - **Response:**   
+     - `GroupNameResponse`: Contains the group ID and group name.
+   - **Response Status:** `200 OK`
+   - **Logs:**
+     - `INFO`: Logs when a request to retrieve the group name by ID is received.
+
+---
+
+### 16. **Get Group by ID**
+
+   - **URL:** `/api/group/by-group-id`
+   - **Method:** `GET`
+   - **Description:** Retrieves group details by its ID.
+   - **Query Parameters:**
+     - `groupId` (String): The ID of the group.
+   - **Sample Request:** `/api/group/by-group-id?groupId=1a2b3c`
+   - **Response:**   
+     - `GroupResponse`: Contains details of the group.
+   - **Response Status:** `200 OK`
+   - **Logs:**
+     - `INFO`: Logs when a request to retrieve a group by its ID is received.
+
+---
+
+### 17. **Get All User Groups**
+
+   - **URL:** `/api/group/all-user-groups`
+   - **Method:** `GET`
+   - **Description:** Retrieves all group IDs that a specific user belongs to.
+   - **Query Parameters:**
+     - `userId` (UUID): The ID of the user.
+   - **Sample Request:** `/api/group/all-user-groups?userId=d290f1ee-6c54-4b01-90e6-d701748f0851`
+   - **Response:**   
+     - `UserGroupsResponse`: Contains a list of group IDs.
+   - **Response Status:** `200 OK`
+   - **Logs:**
+     - `INFO`: Logs when a request to retrieve all groups of a user is received.
+
+---
+
+### 18. **Get Groups Data by IDs**
+
+   - **URL:** `/api/group/groups-list`
+   - **Method:** `POST`
+   - **Description:** Retrieves data of multiple groups by their IDs.
+   - **Request Body:**   
+     - `List<String>`: A list of group IDs.
+   - **Sample Request:**
+     
+       ```json
+       {
+           "groupIds": ["1a2b3c", "4d5e6f"]
+       }
+       ```
+   - **Response:**   
+     - `List<GroupResponse>`: Contains information for each group.
+   - **Response Status:** `200 OK`
+   - **Logs:**
+     - `INFO`: Logs when a request to retrieve groups' data by IDs is received.
+
+---
+
+### 19. **Update Group Profile Picture URL**
+
+   - **URL:** `/api/group/profile-picture-url`
+   - **Method:** `POST`
+   - **Description:** Updates the profile picture URL for a group.
+   - **Request Body:**   
+     - `GroupUpdateProfilePictureUrlRequest`: Contains the group ID and the new profile picture URL.
+       
+       ```json
+       {
+           "groupId": "1a2b3c",
+           "profilePictureUrl": "http://localhost/api/media/picture.jpg"
+       }
+       ```
+   - **Response:**   
+     - `String`: The ID of the group that was updated.
+   - **Response Status:** `200 OK`
+   - **Logs:**
+     - `INFO`: Logs when a request to update a group's profile picture URL is received.
+
+---
+
+### 20. **Update Group Profile Banner URL**
+
+   - **URL:** `/api/group/profile-banner-url`
+   - **Method:** `POST`
+   - **Description:** Updates the profile banner URL for a group.
+   - **Request Body:**   
+     - `GroupUpdateProfileBannerUrlRequest`: Contains the group ID and the new profile banner URL.
+       
+       ```json
+       {
+           "groupId": "1a2b3c",
+           "profileBannerUrl": "http://localhost/api/media/banner.jpg"
+       }
+       ```
+   - **Response:**   
+     - `String`: The ID of the group that was updated.
+   - **Response Status:** `200 OK`
+   - **Logs:**
+     - `INFO`: Logs when a request to update a group's profile banner URL is received.
+
+---
+
+### 21. **Update Group Profile Description**
+
+   - **URL:** `/api/group/description`
+   - **Method:** `POST`
+   - **Description:** Updates the description for a group.
+   - **Request Body:**   
+     - `GroupUpdateDescriptionRequest`: Contains the group ID and the new description.
+       
+       ```json
+       {
+           "groupId": "1a2b3c",
+           "description": "A group for expert developers."
+       }
+       ```
+   - **Response:**   
+     - `String`: The ID of the group that was updated.
+   - **Response Status:** `200 OK`
+   - **Logs:**
+     - `INFO`: Logs when a request
 <br />   
 
 
