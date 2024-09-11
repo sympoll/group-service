@@ -1,8 +1,10 @@
 package com.MTAPizza.Sympoll.groupmanagementservice.service;
 
+import com.MTAPizza.Sympoll.groupmanagementservice.client.MediaClient;
 import com.MTAPizza.Sympoll.groupmanagementservice.client.PollClient;
 import com.MTAPizza.Sympoll.groupmanagementservice.client.UserClient;
 import com.MTAPizza.Sympoll.groupmanagementservice.dto.request.decription.GroupUpdateDescriptionRequest;
+import com.MTAPizza.Sympoll.groupmanagementservice.dto.request.media.GroupDataDeleteRequest;
 import com.MTAPizza.Sympoll.groupmanagementservice.dto.request.poll.DeleteGroupPollsRequest;
 import com.MTAPizza.Sympoll.groupmanagementservice.dto.request.GroupCreateRequest;
 import com.MTAPizza.Sympoll.groupmanagementservice.dto.request.media.GroupUpdateProfileBannerUrlRequest;
@@ -11,6 +13,7 @@ import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.group.service.Gr
 import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.group.service.GroupResponse;
 import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.group.service.MemberDetailsResponse;
 import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.group.service.MemberResponse;
+import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.media.service.GroupDataDeleteResponse;
 import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.poll.service.DeleteGroupPollsResponse;
 import com.MTAPizza.Sympoll.groupmanagementservice.exception.group.GroupNotFoundException;
 import com.MTAPizza.Sympoll.groupmanagementservice.exception.request.RequestFailedException;
@@ -35,6 +38,7 @@ public class GroupService {
     private final GroupRepository groupRepository;
     private final MemberService memberService;
     private final UserRolesService userRolesService;
+    private final MediaClient mediaClient;
     private final UserClient userClient;
     private final PollClient pollClient;
     private final Validator validator;
@@ -245,25 +249,32 @@ public class GroupService {
 
     /**
      * Delete a group from the database, by its ID.
+     * Also delete all of its data from other services such as media-service and poll-service.
      * @param groupId ID of the group to delete.
      * @return The ID of the group that was deleted.
      */
     public String deleteGroup(String groupId) {
         validator.validateDeleteGroup(groupId);
-
         log.info("Deleting group with ID - '{}'", groupId);
-        log.info("Sending request to delete group polls");
-        ResponseEntity<DeleteGroupPollsResponse> response = pollClient.deleteGroupPolls(new DeleteGroupPollsRequest(groupId));
 
-        if (!response.getStatusCode().is2xxSuccessful()) {
-            log.error("Request to delete group polls failed. Status code {}", response.getStatusCode());
-            throw new RequestFailedException("Request to delete group polls failed. Status code " + response.getStatusCode());
+        log.info("Sending request to delete group polls");
+        ResponseEntity<DeleteGroupPollsResponse> deleteGroupPollsResponse = pollClient.deleteGroupPolls(new DeleteGroupPollsRequest(groupId));
+
+        if (!deleteGroupPollsResponse.getStatusCode().is2xxSuccessful()) {
+            log.error("Request to delete group polls failed. Status code {}", deleteGroupPollsResponse.getStatusCode());
+            throw new RequestFailedException("Request to delete group polls failed. Status code " + deleteGroupPollsResponse.getStatusCode());
         }
 
-        //TODO: send request to the media service and send the requests simultaneously.
+        log.info("Sending request to delete group media");
+        ResponseEntity<GroupDataDeleteResponse> groupDataDeleteResponse = mediaClient.deleteGroupData(new GroupDataDeleteRequest(groupId));
+
+        if (!groupDataDeleteResponse.getStatusCode().is2xxSuccessful()) {
+            log.error("Request to delete group media failed. Status code {}", groupDataDeleteResponse.getStatusCode());
+            throw new RequestFailedException("Request to delete group data failed. Status code " + groupDataDeleteResponse.getStatusCode());
+        }
 
         groupRepository.deleteById(groupId);
-        log.info("Deleted group with ID - '{}'", groupId);
+        log.info("Successfully deleted group with ID - '{}'", groupId);
 
         return groupId;
     }
