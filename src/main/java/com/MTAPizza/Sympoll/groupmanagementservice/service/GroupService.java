@@ -334,11 +334,13 @@ public class GroupService {
                 .orElseThrow(
                         () -> new GroupNotFoundException(groupUpdateProfilePictureUrlRequest.groupId())
                 );
+        log.info("Found group with ID: {} to update its profile picture url.", groupUpdateProfilePictureUrlRequest.groupId());
         String oldProfilePictureUrl = groupToUpdate.getProfilePictureUrl();
 
         groupToUpdate.setProfilePictureUrl(groupUpdateProfilePictureUrlRequest.profilePictureUrl());
         groupRepository.save(groupToUpdate);
 
+        log.info("Completed profile picture url upload for group with ID: {}.", groupUpdateProfilePictureUrlRequest.groupId());
         return new GroupUpdateProfilePictureUrlResponse(
                 groupToUpdate.getGroupId(),
                 oldProfilePictureUrl
