@@ -2,11 +2,13 @@ package com.MTAPizza.Sympoll.groupmanagementservice.controller;
 
 import com.MTAPizza.Sympoll.groupmanagementservice.dto.request.GroupCreateRequest;
 import com.MTAPizza.Sympoll.groupmanagementservice.dto.request.decription.GroupUpdateDescriptionRequest;
+import com.MTAPizza.Sympoll.groupmanagementservice.dto.request.media.response.update.GroupUpdateProfileBannerUrlResponse;
+import com.MTAPizza.Sympoll.groupmanagementservice.dto.request.media.response.update.GroupUpdateProfilePictureUrlResponse;
 import com.MTAPizza.Sympoll.groupmanagementservice.dto.request.user.role.UserRoleChangeRequest;
 import com.MTAPizza.Sympoll.groupmanagementservice.dto.request.user.role.UserRoleCreateRequest;
 import com.MTAPizza.Sympoll.groupmanagementservice.dto.request.user.role.UserRoleDeleteRequest;
-import com.MTAPizza.Sympoll.groupmanagementservice.dto.request.media.GroupUpdateProfileBannerUrlRequest;
-import com.MTAPizza.Sympoll.groupmanagementservice.dto.request.media.GroupUpdateProfilePictureUrlRequest;
+import com.MTAPizza.Sympoll.groupmanagementservice.dto.request.media.request.update.GroupUpdateProfileBannerUrlRequest;
+import com.MTAPizza.Sympoll.groupmanagementservice.dto.request.media.request.update.GroupUpdateProfilePictureUrlRequest;
 import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.group.service.DeleteGroupResponse;
 import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.group.service.*;
 import com.MTAPizza.Sympoll.groupmanagementservice.service.GroupService;
@@ -237,7 +239,7 @@ ServiceController {
      */
     @PostMapping("/profile-picture-url")
     @ResponseStatus(HttpStatus.OK)
-    public String updateProfilePictureUrl(@RequestBody GroupUpdateProfilePictureUrlRequest groupUpdateProfilePictureUrlRequest){
+    public GroupUpdateProfilePictureUrlResponse updateProfilePictureUrl(@RequestBody GroupUpdateProfilePictureUrlRequest groupUpdateProfilePictureUrlRequest){
         log.info("Received request to save a profile picture url");
         log.debug("Request received to add profile picture url: {}", groupUpdateProfilePictureUrlRequest);
         return groupService.addProfilePictureUrl(groupUpdateProfilePictureUrlRequest);
@@ -250,7 +252,7 @@ ServiceController {
      */
     @PostMapping("/profile-banner-url")
     @ResponseStatus(HttpStatus.OK)
-    public String updateProfileBannerUrl(@RequestBody GroupUpdateProfileBannerUrlRequest groupUpdateProfileBannerUrlRequest){
+    public GroupUpdateProfileBannerUrlResponse updateProfileBannerUrl(@RequestBody GroupUpdateProfileBannerUrlRequest groupUpdateProfileBannerUrlRequest){
         log.info("Received request to save a banner picture url");
         log.debug("Request received to add banner picture url: {}", groupUpdateProfileBannerUrlRequest);
         return groupService.addProfileBannerUrl(groupUpdateProfileBannerUrlRequest);

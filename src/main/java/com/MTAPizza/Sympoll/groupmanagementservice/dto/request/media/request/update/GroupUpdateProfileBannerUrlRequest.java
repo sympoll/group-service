@@ -1,4 +1,4 @@
-package com.MTAPizza.Sympoll.groupmanagementservice.dto.request.media;
+package com.MTAPizza.Sympoll.groupmanagementservice.dto.request.media.request.update;
 
 public record GroupUpdateProfileBannerUrlRequest(
         String groupId,
