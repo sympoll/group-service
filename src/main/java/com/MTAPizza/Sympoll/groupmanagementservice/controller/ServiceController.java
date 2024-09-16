@@ -17,6 +17,7 @@ import com.MTAPizza.Sympoll.groupmanagementservice.service.UserRolesService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -237,7 +238,7 @@ ServiceController {
      * @param groupUpdateProfilePictureUrlRequest Information on the update to perform.
      * @return The updated group's ID.
      */
-    @PostMapping("/profile-picture-url")
+    @PostMapping(value = "/profile-picture-url", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     public GroupUpdateProfilePictureUrlResponse updateProfilePictureUrl(@RequestBody GroupUpdateProfilePictureUrlRequest groupUpdateProfilePictureUrlRequest){
         log.info("Received request to save a profile picture url");
@@ -250,7 +251,7 @@ ServiceController {
      * @param groupUpdateProfileBannerUrlRequest Information on the update to perform.
      * @return The updated group's ID.
      */
-    @PostMapping("/profile-banner-url")
+    @PostMapping(value = "/profile-banner-url", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     public GroupUpdateProfileBannerUrlResponse updateProfileBannerUrl(@RequestBody GroupUpdateProfileBannerUrlRequest groupUpdateProfileBannerUrlRequest){
         log.info("Received request to save a banner picture url");
