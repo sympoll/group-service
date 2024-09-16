@@ -4,11 +4,13 @@ import com.MTAPizza.Sympoll.groupmanagementservice.client.MediaClient;
 import com.MTAPizza.Sympoll.groupmanagementservice.client.PollClient;
 import com.MTAPizza.Sympoll.groupmanagementservice.client.UserClient;
 import com.MTAPizza.Sympoll.groupmanagementservice.dto.request.decription.GroupUpdateDescriptionRequest;
-import com.MTAPizza.Sympoll.groupmanagementservice.dto.request.media.GroupDataDeleteRequest;
+import com.MTAPizza.Sympoll.groupmanagementservice.dto.request.media.request.delete.GroupDataDeleteRequest;
+import com.MTAPizza.Sympoll.groupmanagementservice.dto.request.media.response.update.GroupUpdateProfileBannerUrlResponse;
+import com.MTAPizza.Sympoll.groupmanagementservice.dto.request.media.response.update.GroupUpdateProfilePictureUrlResponse;
 import com.MTAPizza.Sympoll.groupmanagementservice.dto.request.poll.DeleteGroupPollsRequest;
 import com.MTAPizza.Sympoll.groupmanagementservice.dto.request.GroupCreateRequest;
-import com.MTAPizza.Sympoll.groupmanagementservice.dto.request.media.GroupUpdateProfileBannerUrlRequest;
-import com.MTAPizza.Sympoll.groupmanagementservice.dto.request.media.GroupUpdateProfilePictureUrlRequest;
+import com.MTAPizza.Sympoll.groupmanagementservice.dto.request.media.request.update.GroupUpdateProfileBannerUrlRequest;
+import com.MTAPizza.Sympoll.groupmanagementservice.dto.request.media.request.update.GroupUpdateProfilePictureUrlRequest;
 import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.group.service.GroupNameResponse;
 import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.group.service.GroupResponse;
 import com.MTAPizza.Sympoll.groupmanagementservice.dto.response.group.service.MemberDetailsResponse;
@@ -324,37 +326,47 @@ public class GroupService {
     /**
      * Add a profile picture to a group's profile.
      * @param groupUpdateProfilePictureUrlRequest Information on the update requested.
-     * @return ID of the user that was updated.
+     * @return DTO containing the ID of the group and the old profile picture url.
      */
-    public String addProfilePictureUrl(GroupUpdateProfilePictureUrlRequest groupUpdateProfilePictureUrlRequest) {
+    public GroupUpdateProfilePictureUrlResponse addProfilePictureUrl(GroupUpdateProfilePictureUrlRequest groupUpdateProfilePictureUrlRequest) {
         Group groupToUpdate = groupRepository
                 .findById(groupUpdateProfilePictureUrlRequest.groupId())
                 .orElseThrow(
                         () -> new GroupNotFoundException(groupUpdateProfilePictureUrlRequest.groupId())
                 );
+        log.info("Found group with ID: {} to update its profile picture url.", groupUpdateProfilePictureUrlRequest.groupId());
+        String oldProfilePictureUrl = groupToUpdate.getProfilePictureUrl();
 
         groupToUpdate.setProfilePictureUrl(groupUpdateProfilePictureUrlRequest.profilePictureUrl());
         groupRepository.save(groupToUpdate);
 
-        return groupToUpdate.getGroupId();
+        log.info("Completed profile picture url upload for group with ID: {}.", groupUpdateProfilePictureUrlRequest.groupId());
+        return new GroupUpdateProfilePictureUrlResponse(
+                groupToUpdate.getGroupId(),
+                oldProfilePictureUrl
+        );
     }
 
     /**
      * Add a banner picture to a group's profile.
      * @param groupUpdateProfileBannerUrlRequest Information on the update requested.
-     * @return ID of the user that was updated.
+     * @return DTO containing the ID of the group and the old profile banner url.
      */
-    public String addProfileBannerUrl(GroupUpdateProfileBannerUrlRequest groupUpdateProfileBannerUrlRequest) {
+    public GroupUpdateProfileBannerUrlResponse addProfileBannerUrl(GroupUpdateProfileBannerUrlRequest groupUpdateProfileBannerUrlRequest) {
         Group groupToUpdate = groupRepository
                 .findById(groupUpdateProfileBannerUrlRequest.groupId())
                 .orElseThrow(
                         () -> new GroupNotFoundException(groupUpdateProfileBannerUrlRequest.groupId())
                 );
+        String oldProfileBannerUrl = groupToUpdate.getProfilePictureUrl();
 
         groupToUpdate.setProfileBannerUrl(groupUpdateProfileBannerUrlRequest.profileBannerUrl());
         groupRepository.save(groupToUpdate);
 
-        return groupToUpdate.getGroupId();
+        return new GroupUpdateProfileBannerUrlResponse(
+                groupToUpdate.getGroupId(),
+                oldProfileBannerUrl
+        );
     }
 
     /**
